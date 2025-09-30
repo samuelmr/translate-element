@@ -69,15 +69,10 @@
         "fi": "3. Halutessasi tyylittele kielivalikko CSS:llä:",
         "sv": "3. Valfritt, styla språkväljarelementet med CSS:"
     },
-    "Configuration": {
-        "de": "Konfiguration",
-        "fi": "Konfigurointi",
-        "sv": "Konfiguration"
-    },
-    "You can configure the default language using the default attribute:": {
-        "de": "Sie können die Standardsprache mit dem Attribut 'default' konfigurieren:",
-        "fi": "Voit määrittää oletuskielen käyttämällä default-attribuuttia:",
-        "sv": "Du kan konfigurera standardspråket med hjälp av attributet 'default':"
+    "You can use translate-element.css as an example.": {
+        "de": "Sie können <a href=\"https://unpkg.com/translate-element/translate-element.css\">translate-element.css</a> als Beispiel verwenden.",
+        "fi": "Voit käyttää tiedostoa <a href=\"https://unpkg.com/translate-element/translate-element.css\">translate-element.css</a> esimerkkinä.",
+        "sv": "Du kan använda <a href=\"https://unpkg.com/translate-element/translate-element.css\">translate-element.css</a> som ett exempel."
     },
     "Creating Translatable Content": {
         "de": "Erstellen von übersetzbarem Inhalt",
