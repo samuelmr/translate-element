@@ -1,6 +1,6 @@
 {
   "name": "translate-element",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A simple web component for translating text content in HTML pages.",
   "keywords": [
     "translation",
@@ -10,7 +10,7 @@
     "i18n",
     "localization"
   ],
-  "homepage": "https://github.com/samuelmr/translate-element#readme",
+  "homepage": "https://samuelmr.github.io/translate-element/",
   "bugs": {
     "url": "https://github.com/samuelmr/translate-element/issues"
   },
