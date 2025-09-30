@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Translate-element</title>
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="width">
+    <meta name="description" content="Custom HTML element for simple website translation.">
+    <meta name="keywords" content="translation, translate, web component, i18n, localization">
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <header>
+      <h1>translate-element</h1>
+      <link rel="stylesheet" href="./translate-element.css">
+      <script src="./translate-element.js"></script>
+      <translate-element></translate-element>
+    </header>
+    <p lang="en">A simple web component for translating text content in HTML pages.</p>
+    <p lang="en">Author your HTML content in any language. Mark the translatable sections with the <code>lang</code> attribute. Create a JSON file for translations. Add the web component to your page, and it will render a language switcher element for the languages found.</p>
+
+    <h2 lang="en">Features</h2>
+    <ul>
+      <li lang="en">Apply CSS styles like you would to a <code>ul</code>/<code>li</code> list</li>
+      <li lang="en">Automatic language detection from URL parameters (<code>?lang=en</code>)</li>
+      <li lang="en">Dynamic content translation (new elements added to DOM)</li>
+      <li lang="en">Fallback to default language if translation not found</li>
+      <li lang="en">Support for nested translatable elements</li>
+      <li lang="en">Attribute translation</li>
+    </ul>
+    
+    <h2 lang="en">Usage</h2>
+    
+    <h3 lang="en">Basic Setup</h3>
+    <p lang="en">1. Include the CSS and JavaScript files in your HTML:</p>
+    <pre><code>&lt;link rel="stylesheet" href="translate-element.css"&gt;
+&lt;script src="translate-element.js"&gt;&lt;/script&gt;</code></pre>
+    
+    <p lang="en">2. Add the translate element to your page:</p>
+    <pre><code>&lt;translate-element&gt;&lt;/translate-element&gt;</code></pre>
+
+    <p lang="en">3. Optionally, style the language switcher element using CSS:</p>
+    <pre><code>&lt;link rel="stylesheet" href="translate-element.css"&gt;</code></pre>
+
+    <h3 lang="en">Creating Translatable Content</h3>
+    <p lang="en">Mark elements for translation by adding the <code>lang</code> attribute with your default language:</p>
+    
+    <h4 lang="en">Text Content</h4>
+    <pre><code>&lt;h1 lang="en"&gt;Welcome&lt;/h1&gt;
+&lt;p lang="en"&gt;This is a sample paragraph.&lt;/p&gt;</code></pre>
+    
+    <h4 lang="en">Form Elements</h4>
+    <pre><code>&lt;input type="submit" value="Submit" lang="en"&gt;
+&lt;input type="text" placeholder="Enter your name" lang="en"&gt;
+&lt;button lang="en"&gt;Click Me&lt;/button&gt;</code></pre>
+    
+    <h4 lang="en">Attributes</h4>
+    <p lang="en">If an element has the <code>lang</code> attribute, the following attributes are translated: <code>alt</code>, <code>cite</code>, <code>href</code>, <code>label</code>, <code>placeholder</code>, <code>src</code>, <code>srcset</code>, <code>title</code>, <code>value</code>.</p>
+    <pre><code>&lt;img src="image.jpg" alt="Sample image" lang="en"&gt;
+&lt;a href="/contact" title="Contact us" lang="en"&gt;Contact&lt;/a&gt;</code></pre>
+    
+    <h3 lang="en">Translation File (translations.json)</h3>
+    <p lang="en">Create a JSON file with your translations. First level keys are the <code>textContent</code> of the elements to translate. The values are objects with a language codes as keys and corresponding translations as values. Example:</p>
+    <pre><code>{
+  "Text to translate": {
+    "fi": "Käännettävä teksti",
+    "sv": "Text att översätta",
+    "de": "Zu übersetzender Text"
+  },
+  "Welcome": {
+    "fi": "Tervetuloa",
+    "sv": "Välkommen",
+    "de": "Willkommen"
+  }
+}</code></pre>
+    
+    <h2 lang="en">Console output</h2>
+    <p lang="en">If the HTML content contains an element with the <code>lang</code> attribute, but no translations are found in the <code>translations.json</code> file, the web component will output the <code>textContent</code> of the untranslated element into the developer console.</p>
+    <h2 lang="en">Complete Example</h2>
+    <table>
+        <tr><th>HTML</th><th><code>translations.json</code></th></tr>
+        <tr><td>
+            <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title lang="en"&gt;My Website&lt;/title&gt;
+  &lt;link rel="stylesheet" href="translate-element.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;translate-element default="en"&gt;&lt;/translate-element&gt;
+  
+  &lt;header&gt;
+    &lt;h1 lang="en"&gt;Welcome to My Site&lt;/h1&gt;
+    &lt;nav&gt;
+      &lt;a href="/about" lang="en"&gt;About&lt;/a&gt;
+      &lt;a href="/contact" lang="en"&gt;Contact&lt;/a&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+  
+  &lt;main&gt;
+    &lt;p lang="en"&gt;This &lt;code&gt;content&lt;/code&gt; will be translated.&lt;/p&gt;
+    &lt;input type="submit" lang="en" value="Get Started"&gt;
+  &lt;/main&gt;
+  
+  &lt;script src="translate-element.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+        </td><td>
+            <pre><code>{
+    "My Website": {
+        "de": "Meine Webseite",
+        "sv": "Min webbplats"
+    },
+    "Welcome to my My Site": {
+        "de": "Willkommen auf meiner Webseite",
+        "sv": "Välkommen till Min webbplats"
+    },
+    "About": {
+        "de": "Über",
+        "sv": "Om"
+    },
+    "Contact": {
+        "de": "Kontakt",
+        "sv": "Kontakt"
+    },
+    "This content will be translated.": {
+        "de": "Dieser &lt;code&gt;Inhalt&lt;/code&gt; wird übersetzt.",
+        "sv": "Detta &lt;code&gt;innehåll&lt;/code&gt; kommer att översättas."
+    },
+    "Get Started": {
+        "de": "Loslegen",
+        "sv": "Kom igång"
+    }
+}</code></pre>
+        </td></tr>
+    </table>
+
+  </body>
+</html>
