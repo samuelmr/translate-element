@@ -1,0 +1,28 @@
+{
+  "name": "translate-element",
+  "version": "1.0.0",
+  "description": "A simple web component for translating text content in HTML pages.",
+  "keywords": [
+    "translation",
+    "translate",
+    "web",
+    "component",
+    "i18n",
+    "localization"
+  ],
+  "homepage": "https://github.com/samuelmr/translate-element#readme",
+  "bugs": {
+    "url": "https://github.com/samuelmr/translate-element/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samuelmr/translate-element.git"
+  },
+  "license": "Apache-2.0",
+  "author": "Samuel Rinnetmäki <samuel@iki.fi>",
+  "type": "commonjs",
+  "main": "translate-element.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
