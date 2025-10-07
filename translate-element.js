@@ -139,12 +139,14 @@ class TranslateElement extends HTMLElement {
             if (node.nodeType == 1 && node.hasAttribute(this.langAttribute) && node.getAttribute(this.langAttribute) == this.defaultLanguage) {
               this.translateElement(node)
             }
+            /*
             if (node.querySelectorAll) {
               const translatableChildren = node.querySelectorAll(`[${this.langAttribute}="${this.defaultLanguage}"]`) || []
               for (const child of translatableChildren) {
                 this.translateElement(child)
               }
             }
+            */
           }
         }
         else if (mutation.type == 'attributes' && mutation.target.hasAttribute(this.langAttribute)) {
@@ -223,9 +225,9 @@ class TranslateElement extends HTMLElement {
     for (const attr of this.translatableAttributes) {
       const attrKey = elem.getAttribute(attr)
       if (this.translations[attrKey] !== undefined) {
+        // element's textContent is not in the translations but attributes might be
         for (const lang in this.translations[attrKey]) {
           this.languages[lang] = true
-          // element's textContent is not in the translations but attritutes might be
           copies[lang] = copies[lang] || this.deepCopy(elem, lang)
           copies[lang].setAttribute(attr, this.translations[attrKey][lang])
         }
@@ -244,6 +246,7 @@ class TranslateElement extends HTMLElement {
       if (key) console.warn('No translations for ', key)
       elem.removeAttribute(this.langAttribute) // not translated
     }
+    return translated
   }
 
   setLanguage(lang, byDOM=false) {
