@@ -58,10 +58,12 @@ class TranslateElement extends HTMLElement {
     }
     try {
       const resp = await fetch(this.translationFile)
-      if (!resp.ok) {
-        throw new Error(`Failed to load translations from ${this}: ${resp.status}`);
+      if (resp.ok) {
+        Object.assign(this.translations, await resp.json()) // merge
       }
-      this.translations = await resp.json()
+      else {
+        console.warn(`Failed to load translations from ${this.translationFile}: ${resp.status}`);
+      }
       const translatables = document.querySelectorAll('[lang]')
       for (const elem of translatables) {
         this.translateElement(elem)
@@ -139,14 +141,12 @@ class TranslateElement extends HTMLElement {
             if (node.nodeType == 1 && node.hasAttribute(this.langAttribute) && node.getAttribute(this.langAttribute) == this.defaultLanguage) {
               this.translateElement(node)
             }
-            /*
-            if (node.querySelectorAll) {
+            else if (node.querySelectorAll) {
               const translatableChildren = node.querySelectorAll(`[${this.langAttribute}="${this.defaultLanguage}"]`) || []
               for (const child of translatableChildren) {
                 this.translateElement(child)
               }
             }
-            */
           }
         }
         else if (mutation.type == 'attributes' && mutation.target.hasAttribute(this.langAttribute)) {
@@ -216,6 +216,12 @@ class TranslateElement extends HTMLElement {
         for (const child of translatableChildren) {
           this.translateElement(child, copies[lang])
         }
+      }
+    }
+    else {
+      const translatableChildren = elem.querySelectorAll(`[${this.langAttribute}="${this.defaultLanguage}"]`)
+      for (const child of translatableChildren) {
+        this.translateElement(child, copies[lang])
       }
     }
     if (elem.tagName.toLowerCase() == 'title') {
