@@ -240,7 +240,7 @@ class TranslateElement extends HTMLElement {
       }
     }
     // see if translations already exist in the DOM
-    let translated = elem.parentNode?.querySelectorAll(`[${this.langAttribute}]:not([${this.langAttribute}="${this.defaultLanguage}"])`)
+    let translated = elem.parentNode?.querySelector(`:scope > ${elem.tagName}[${this.langAttribute}]:not([${this.langAttribute}="${this.defaultLanguage}"])`)
     for (const lang in copies) {
       if (parent) {
         parent.replaceChild(copies[lang], elem)
