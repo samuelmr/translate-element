@@ -36,7 +36,7 @@ Author your HTML content in any language. Mark the translatable sections with th
 {
   "Text to translate": {
     "sv": "Text att översätta",
-    "de": "Zu übersetzender Text"
+    "de": "Text zu übersetz"
   },
   "Welcome": {
     "sv": "Välkommen",
