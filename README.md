@@ -42,7 +42,8 @@ Author your HTML content in any language. Mark the translatable sections with th
     "sv": "Välkommen",
     "de": "Willkommen"
   }
-}```
+}
+```
 
 
 See [documentation](https://samuelmr.github.io/translate-element/) for further instructions.
