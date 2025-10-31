@@ -67,7 +67,7 @@
 &lt;p lang="en"&gt;This is a sample paragraph.&lt;/p&gt;
 <ins>&lt;p lang="de"&gt;Dies ist ein Beispielabsatz.&lt;/p&gt;</ins></code></pre>
 
-    <h3 lang="en">Translation File (`translations.json`)</h3>
+    <h3 lang="en">Translation File (translations.json)</h3>
     <p lang="en">Create a JSON file with your translations. First level keys are the <code>textContent</code> of the elements to translate. The values are objects with a language codes as keys and corresponding translations as values. Example:</p>
     <pre><code>{
   "Text to translate": {
@@ -82,7 +82,7 @@
   }
 }</code></pre>
 
-    <p class="en">Refer to the translation file in your HTML:</p>
+    <p lang="en">Refer to the translation file in your HTML:</p>
     <pre><code>&lt;translate-element <ins>src="translations.json"</ins>&gt;&lt;/translate-element&gt;</code></pre>
     
     <h2 lang="en">Console output</h2>
@@ -99,7 +99,7 @@
   &lt;link rel="stylesheet" href="translate-element.css"&gt;
 &lt;/head&gt;
 &lt;body&gt;
-  &lt;translate-element default="en"&gt;&lt;/translate-element&gt;
+  &lt;translate-element src="translations.json"&gt;&lt;/translate-element&gt;
   
   &lt;header&gt;
     &lt;h1 lang="en"&gt;Welcome to My Site&lt;/h1&gt;
