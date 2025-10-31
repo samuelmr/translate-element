@@ -6,7 +6,7 @@ class TranslateElement extends HTMLElement {
     super();
     this.defaultLanguage = 'en'
     this.previousLanguage = this.defaultLanguage
-    this.translationFile = './translations.json'
+    this.translationFile = null
     this.langAttribute = 'lang'
     this.classSelector = 'translate-element'
     this.langQueryParameter = 'lang'
@@ -47,35 +47,38 @@ class TranslateElement extends HTMLElement {
     if (langParent) {
       this.defaultLanguage = langParent.getAttribute(this.langAttribute)
     }
+    this.previousLanguage = this.defaultLanguage
     this.currentLanguage = this.defaultLanguage
-    const switcher = this;
-    switcher.classList.add(this.classSelector)
-    switcher.setAttribute('default', this.defaultLanguage)
+    this.translationFile = this.getAttribute('src')
+    this.classList.add(this.classSelector)
+    this.setAttribute('default', this.defaultLanguage)
     const params = new URLSearchParams(document.location.search)
     const newLanguage = params.get(this.langQueryParameter)
     if (newLanguage) {
       this.currentLanguage = newLanguage
     }
-    try {
-      const resp = await fetch(this.translationFile)
-      if (resp.ok) {
-        Object.assign(this.translations, await resp.json()) // merge
+    if (this.translationFile) {
+      try {
+        const resp = await fetch(this.translationFile)
+        if (resp.ok) {
+          Object.assign(this.translations, await resp.json()) // merge
+        }
+        else {
+          console.warn(`Failed to load translations from ${this.translationFile}: ${resp.status}`);
+        }
+        const translatables = document.querySelectorAll('[lang]')
+        for (const elem of translatables) {
+          this.translateElement(elem)
+        }
+        if (newLanguage && ! (newLanguage in this.languages)) {
+          console.warn(`No translations for language ${newLanguage}, reverting to ${this.defaultLanguage}`)
+          this.currentLanguage = this.defaultLanguage
+        }
       }
-      else {
-        console.warn(`Failed to load translations from ${this.translationFile}: ${resp.status}`);
+      catch(e) {
+        console.error(e)
+        return false
       }
-      const translatables = document.querySelectorAll('[lang]')
-      for (const elem of translatables) {
-        this.translateElement(elem)
-      }
-      if (newLanguage && ! (newLanguage in this.languages)) {
-        console.warn(`No translations for language ${newLanguage}, reverting to ${this.defaultLanguage}`)
-        this.currentLanguage = this.defaultLanguage
-      }
-    }
-    catch(e) {
-      console.error(e)
-      return false
     }
     this.root.setAttribute(this.langAttribute, this.currentLanguage)
     
@@ -96,21 +99,21 @@ class TranslateElement extends HTMLElement {
         try { // won't work with file:// URIs
           history.replaceState({lang}, '', a.href)
         } catch(e) { }
-        const prev = switcher.querySelector('li.selected')
+        const prev = this.querySelector('li.selected')
         prev.classList.remove('selected')
         li.classList.add('selected')
         this.setLanguage(lang)
       }
       langSwitcher.appendChild(li)
     }
-    switcher.appendChild(langSwitcher)
+    this.appendChild(langSwitcher)
     const style = document.createElement("style")
     style.textContent = `
 *[${this.langAttribute}]:not([${this.langAttribute}="${this.currentLanguage}"]) {
  display: none !important;
 }
 `
-    switcher.appendChild(style)
+    this.appendChild(style)
     for (const stylesheet of document.styleSheets) {
       try {
         for (let i = 0; i < stylesheet.cssRules.length; i++) {
