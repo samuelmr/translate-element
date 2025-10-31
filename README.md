@@ -17,6 +17,7 @@ Author your HTML content in any language. Mark the translatable sections with th
 ```
 
 3. Add the translate element to your page and EITHER, embed the translations into your page:
+
 ```html
 <translate-element></translate-element>
 <h1 lang="en">Welcome</h1>
