@@ -6,7 +6,7 @@
     },
     "Author your HTML content in any language. Mark the translatable sections with the lang attribute. Create a JSON file for translations. Add the web component to your page, and it will render a language switcher element for the languages found.": {
         "de": "Erstellen Sie Ihre HTML-Inhalte in jeder Sprache. Markieren Sie die übersetzbaren Abschnitte mit dem Attribut 'lang'. Erstellen Sie eine JSON-Datei für Übersetzungen. Fügen Sie die Webkomponente zu Ihrer Seite hinzu, und sie rendert ein Sprachelement für die gefundenen Sprachen.",
-        "fi": "Luo HTML-sisältösi millä tahansa kielellä. Merkitse käännettävät osiot lang-attribuutilla. Luo JSON-tiedosto käännöksiä varten. Lisää web-komponentti sivullesi, ja se renderöi kielenvaihtoehdon löydetyille kielille.",
+        "fi": "Luo HTML-sisältösi millä tahansa kielellä. Merkitse käännettävät osiot lang-attribuutilla. Luo JSON-tiedosto käännöksiä varten. Lisää web-komponentti sivullesi, ja se muodostaa kielenvaihtajan löydetyille kielille.",
         "sv": "Skapa ditt HTML-innehåll på vilket språk som helst. Markera de översättbara avsnitten med lang-attributet. Skapa en JSON-fil för översättningar. Lägg till webbkomponenten på din sida, och den kommer att rendera ett språkväljarelement för de språk som hittats."
     },
     "Features": {
@@ -16,7 +16,7 @@
     },
     "Apply CSS styles like you would to a ul/li list": {
         "de": "Wenden Sie CSS-Stile an, wie Sie es bei einer <code>ul</code>/<code>li</code>-Liste tun würden",
-        "fi": "Käytä CSS-tyylejä kuten käyttäisit <code>ul</code>/<code>li</code>-listalle",
+        "fi": "Käytä CSS-tyylejä kuten <code>ul</code>/<code>li</code>-listalle",
         "sv": "Använd CSS-stilar som du skulle göra för en <code>ul</code>/<code>li</code>-lista"
     },
     "Automatic language detection from URL parameters (?lang=en)": {
@@ -26,7 +26,7 @@
     },
     "Dynamic content translation (new elements added to DOM)": {
         "de": "Dynamische Inhaltsübersetzung (neue Elemente, die dem DOM hinzugefügt werden)",
-        "fi": "Dynaaminen sisällön käännös (uudet elementit, jotka lisätään DOM:iin)",
+        "fi": "Dynaaminen sisällön käännös (uudet elementit lisätään DOM:iin)",
         "sv": "Dynamisk innehållsöversättning (nya element som läggs till i DOM)"
     },
     "Fallback to default language if translation not found": {
@@ -54,10 +54,10 @@
         "fi": "Perusasetukset",
         "sv": "Grundläggande inställningar"
     },
-    "1. Include the CSS and JavaScript files in your HTML:": {
-        "de": "1. Binden Sie die CSS- und JavaScript-Dateien in Ihr HTML ein:",
-        "fi": "1. Sisällytä CSS- ja JavaScript-tiedostot HTML-tiedostoosi:",
-        "sv": "1. Inkludera CSS- och JavaScript-filerna i din HTML:"
+    "1. Include the JavaScript code in your HTML:": {
+        "de": "1. Binden Sie den JavaScript-Code in Ihr HTML ein:",
+        "fi": "1. Sisällytä JavaScript-koodi HTML-tiedostoosi:",
+        "sv": "1. Inkludera JavaScript-koden i din HTML:"
     },
     "2. Add the translate element to your page:": {
         "de": "2. Fügen Sie das Übersetzungselement zu Ihrer Seite hinzu:",
@@ -66,7 +66,7 @@
     },
     "3. Optionally, style the language switcher element using CSS:": {
         "de": "3. Optional: Stylen Sie das Sprachelement mit CSS:",
-        "fi": "3. Halutessasi tyylittele kielivalikko CSS:llä:",
+        "fi": "3. Halutessasi muotoile kielivalikko CSS:llä:",
         "sv": "3. Valfritt, styla språkväljarelementet med CSS:"
     },
     "You can use translate-element.css as an example.": {
@@ -104,6 +104,16 @@
         "fi": "Jos elementillä on <code>lang</code>-attribuutti, seuraavat attribuutit käännetään: <code>alt</code>, <code>cite</code>, <code>href</code>, <code>label</code>, <code>placeholder</code>, <code>src</code>, <code>srcset</code>, <code>title</code>, <code>value</code>.",
         "sv": "Om ett element har attributet <code>lang</code> översätts följande attribut: <code>alt</code>, <code>cite</code>, <code>href</code>, <code>label</code>, <code>placeholder</code>, <code>src</code>, <code>srcset</code>, <code>title</code>, <code>value</code>."
     },
+    "Embedded translations": {
+        "de": "Eingebettete Übersetzungen",
+        "fi": "Upotetut käännökset",
+        "sv": "Inbäddade översättningar"
+    },
+    "You can maintain the translations directly within your HTML:": {
+        "de": "Sie können die Übersetzungen direkt in Ihrem HTML pflegen:",
+        "fi": "Voit ylläpitää käännöksiä suoraan HTML:ssä:",
+        "sv": "Du kan underhålla översättningarna direkt i din HTML:"
+    },
     "Translation File (translations.json)": {
         "de": "Übersetzungsdatei (translations.json)",
         "fi": "Käännöstiedosto (translations.json)",
@@ -114,6 +124,11 @@
         "fi": "Luo JSON-tiedosto käännöksilläsi. Ensimmäisen tason avaimet ovat käännettävien elementtien <code>textContent</code>. Arvot ovat objekteja, joissa kielikoodit ovat avaimina ja vastaavat käännökset arvoina. Esimerkki:",
         "sv": "Skapa en JSON-fil med dina översättningar. Första nivåns nycklar är <code>textContent</code> för de element som ska översättas. Värdena är objekt med språkkoder som nycklar och motsvarande översättningar som värden. Exempel:"
     },
+    "Refer to the translation file in your HTML:": {
+        "de": "Verweisen Sie in Ihrem HTML auf die Übersetzungsdatei:",
+        "fi": "Viittaa käännöstiedostoon HTML:ssäsi:",
+        "sv": "Referera till översättningsfilen i din HTML:"
+    },
     "Console output": {
         "de": "Konsolenausgabe",
         "fi": "Konsolin tuloste",
@@ -121,7 +136,7 @@
     },
     "If the HTML content contains an element with the lang attribute, but no translations are found in the translations.json file, the web component will output the textContent of the untranslated element into the developer console.": {
         "de": "Wenn der HTML-Inhalt ein Element mit dem Attribut <code>lang</code> enthält, aber keine Übersetzungen in der Datei <code>translations.json</code> gefunden werden, gibt die Webkomponente den <code>textContent</code> des nicht übersetzten Elements in der Entwicklertools-Konsole aus.",
-        "fi": "Jos HTML-sisältö sisältää elementin, jossa on <code>lang</code>-attribuutti, mutta käännöksiä ei löydy tiedostosta <code>translations.json</code>, verkkokomponentti tulostaa käännetyn elementin <code>textContent</code>-sisällön kehittäjäkonsoliin.",
+        "fi": "Jos HTML-sisältö sisältää elementin, jossa on <code>lang</code>-attribuutti, mutta käännöksiä ei löydy tiedostosta <code>translations.json</code>, komponentti tulostaa käännetyn elementin <code>textContent</code>-sisällön kehittäjäkonsoliin.",
         "sv": "Om HTML-innehållet innehåller ett element med attributet <code>lang</code>, men inga översättningar hittas i filen <code>translations.json</code>, kommer webbkomponenten att skriva ut <code>textContent</code> för det oöversatta elementet i utvecklarkonsolen."
     },
     "Complete Example": {
