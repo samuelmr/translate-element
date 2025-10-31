@@ -247,6 +247,10 @@ class TranslateElement extends HTMLElement {
     const l = n?.getAttribute(this.langAttribute)
     let translated = n && (n.tagName == elem.tagName) && l && (l != this.defaultLanguage)
     for (const lang in copies) {
+      if (n && (n.tagName == elem.tagName) && (l == lang)) {
+        translated = true
+        continue
+      }
       if (parent) {
         parent.replaceChild(copies[lang], elem)
       } else {
@@ -302,10 +306,7 @@ class TranslateElement extends HTMLElement {
       }
     }
     for (const listener of this.listeners) {
-      // if (elem[`on${listener}`]) copy[`on${listener}`] = elem[`on${listener}`]
-      if (elem.hasAttribute(listener)) {
-        copy.setAttribute(listener, elem.getAttribute(listener))
-      }
+      if (elem[`on${listener}`]) copy[`on${listener}`] = elem[`on${listener}`]
     }
     return copy
   }
