@@ -43,6 +43,11 @@ pre {
     margin-top: 0;
     padding: 0.5em;
 }
+code ins {
+    color: lightblue;
+    font-style: normal;
+    text-decoration: none;
+}
 
 .translate-element {
   position: absolute;

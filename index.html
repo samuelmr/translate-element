@@ -34,33 +34,40 @@
     
     <h3 lang="en">Basic Setup</h3>
     <p lang="en">1. Include the CSS and JavaScript files in your HTML:</p>
-    <pre><code>&lt;script src="https://unpkg.com/translate-element/translate-element.js"&gt;&lt;/script&gt;</code></pre>
+    <pre><code><ins>&lt;script src="https://unpkg.com/translate-element/translate-element.js"&gt;&lt;/script&gt;</ins></code></pre>
     
     <p lang="en">2. Add the translate element to your page:</p>
-    <pre><code>&lt;translate-element&gt;&lt;/translate-element&gt;</code></pre>
+    <pre><code><ins>&lt;translate-element&gt;&lt;/translate-element&gt;</ins></code></pre>
 
     <p lang="en">3. Optionally, style the language switcher element using CSS:</p>
-    <pre><code>&lt;link rel="stylesheet" href="translate-element.css"&gt;</code></pre>
+    <pre><code><ins>&lt;link rel="stylesheet" href="translate-element.css"&gt;</ins></code></pre>
     <p lang="en">You can use <a href="https://unpkg.com/translate-element/translate-element.css">translate-element.css</a> as an example.</p>
 
     <h3 lang="en">Creating Translatable Content</h3>
     <p lang="en">Mark elements for translation by adding the <code>lang</code> attribute with your default language:</p>
     
     <h4 lang="en">Text Content</h4>
-    <pre><code>&lt;h1 lang="en"&gt;Welcome&lt;/h1&gt;
-&lt;p lang="en"&gt;This is a sample paragraph.&lt;/p&gt;</code></pre>
+    <pre><code>&lt;h1<ins> lang="en"</ins>&gt;Welcome&lt;/h1&gt;
+&lt;p<ins> lang="en"</ins>&gt;This is a sample paragraph.&lt;/p&gt;</code></pre>
     
     <h4 lang="en">Form Elements</h4>
-    <pre><code>&lt;input type="submit" value="Submit" lang="en"&gt;
-&lt;input type="text" placeholder="Enter your name" lang="en"&gt;
-&lt;button lang="en"&gt;Click Me&lt;/button&gt;</code></pre>
+    <pre><code>&lt;input type="submit" value="Submit"<ins> lang="en"</ins>&gt;
+&lt;input type="text" placeholder="Enter your name"<ins> lang="en"</ins>&gt;
+&lt;button<ins> lang="en"</ins>&gt;Click Me&lt;/button&gt;</code></pre>
     
     <h4 lang="en">Attributes</h4>
     <p lang="en">If an element has the <code>lang</code> attribute, the following attributes are translated: <code>alt</code>, <code>cite</code>, <code>href</code>, <code>label</code>, <code>placeholder</code>, <code>src</code>, <code>srcset</code>, <code>title</code>, <code>value</code>.</p>
-    <pre><code>&lt;img src="image.jpg" alt="Sample image" lang="en"&gt;
-&lt;a href="/contact" title="Contact us" lang="en"&gt;Contact&lt;/a&gt;</code></pre>
-    
-    <h3 lang="en">Translation File (translations.json)</h3>
+    <pre><code>&lt;img src="image.jpg" alt="Sample image"<ins> lang="en"</ins>&gt;
+&lt;a href="/contact" title="Contact us"<ins> lang="en"</ins>&gt;Contact&lt;/a&gt;</code></pre>
+
+    <h3 lang="en">Embedded translations</h3>
+    <p>You can maintain the translations directly within your HTML:</p>
+    <pre><code>&lt;h1 lang="en"&gt;Welcome&lt;/h1&gt;
+<ins>&lt;h1 lang="de"&gt;Willkommen&lt;/h1&gt;</ins>
+&lt;p lang="en"&gt;This is a sample paragraph.&lt;/p&gt;
+<ins>&lt;p lang="de"&gt;Dies ist ein Beispielabsatz.&lt;/p&gt;</ins></code></pre>
+
+    <h3 lang="en">Translation File (`translations.json`)</h3>
     <p lang="en">Create a JSON file with your translations. First level keys are the <code>textContent</code> of the elements to translate. The values are objects with a language codes as keys and corresponding translations as values. Example:</p>
     <pre><code>{
   "Text to translate": {
@@ -74,6 +81,9 @@
     "de": "Willkommen"
   }
 }</code></pre>
+
+    <p class="en">Refer to the translation file in your HTML:</p>
+    <pre><code>&lt;translate-element <ins>src="translations.json"</ins>&gt;&lt;/translate-element&gt;</code></pre>
     
     <h2 lang="en">Console output</h2>
     <p lang="en">If the HTML content contains an element with the <code>lang</code> attribute, but no translations are found in the <code>translations.json</code> file, the web component will output the <code>textContent</code> of the untranslated element into the developer console.</p>
