@@ -38,6 +38,7 @@ class TranslateElement extends HTMLElement {
     this.translatableAttributes = ['alt', 'cite', 'href', 'label', 'placeholder', 'src', 'srcset', 'title', 'value']
     this.translations = {}
     this.titles = {}
+    this.translationQueue = []
   }
   async connectedCallback() {
     if (this.getAttribute('default')) {
@@ -67,8 +68,14 @@ class TranslateElement extends HTMLElement {
           console.warn(`Failed to load translations from ${this.translationFile}: ${resp.status}`);
         }
         const translatables = document.querySelectorAll('[lang]')
-        for (const elem of translatables) {
-          this.translateElement(elem)
+        this.translationQueue = Array.from(document.querySelectorAll('[lang]'))
+        for (const elem of this.translationQueue) {
+          try {
+            this.translateElement(elem)
+          }
+          catch(e) {
+            console.error(`Error translating element: `, elem, e)
+          }
         }
         if (newLanguage && ! (newLanguage in this.languages)) {
           console.warn(`No translations for language ${newLanguage}, reverting to ${this.defaultLanguage}`)
@@ -90,6 +97,7 @@ class TranslateElement extends HTMLElement {
       a.textContent = lang
       a.href = document.location.pathname + '?' + params.toString()
       a.hreflang = lang
+      a.rel = 'alternate'
       li.appendChild(a)
       if (lang == this.currentLanguage) {
         li.className = 'selected'
@@ -129,7 +137,7 @@ class TranslateElement extends HTMLElement {
       }
     }
     this.popstateHandler = (event) => {
-      const lang = event.state?.currentLanguage
+      const lang = event.state?.lang
       if (lang) {
         this.setLanguage(lang)
       }
@@ -175,6 +183,14 @@ class TranslateElement extends HTMLElement {
   }
 
   translateElement(elem, parent=null) {
+    // translate child elements first
+    const translatableChildren = elem.querySelectorAll(`[${this.langAttribute}="${this.defaultLanguage}"]`)
+    for (const child of translatableChildren) {
+      this.translateElement(child, elem)
+    }
+    if (this.translationQueue.includes(elem)) {
+      this.translationQueue.splice(this.translationQueue.indexOf(elem), 1)
+    }
     this.languages[elem.getAttribute(this.langAttribute)] = true
     if (elem == this.root) {
       return false
@@ -182,7 +198,8 @@ class TranslateElement extends HTMLElement {
     if (elem.tagName.toLowerCase() == 'title') {
       this.titles[this.previousLanguage] = elem.textContent
     }
-    if (!parent && elem.parentNode.tagName.toLowerCase() == 'optgroup' && elem.parentNode.hasAttribute(this.langAttribute)) {
+    // skip options in translatabe optgroups
+    if (!parent && elem.parentNode && elem.parentNode.tagName.toLowerCase() == 'optgroup' && elem.parentNode.hasAttribute(this.langAttribute)) {
       return false
     }
     let key = elem.textContent
@@ -215,16 +232,6 @@ class TranslateElement extends HTMLElement {
         else {
           copies[lang].innerHTML = this.translations[key][lang]
         }
-        const translatableChildren = copies[lang].querySelectorAll(`[${this.langAttribute}="${this.defaultLanguage}"]`)
-        for (const child of translatableChildren) {
-          this.translateElement(child, copies[lang])
-        }
-      }
-    }
-    else {
-      const translatableChildren = elem.querySelectorAll(`[${this.langAttribute}="${this.defaultLanguage}"]`)
-      for (const child of translatableChildren) {
-        this.translateElement(child, copies[lang])
       }
     }
     if (elem.tagName.toLowerCase() == 'title') {
@@ -251,7 +258,7 @@ class TranslateElement extends HTMLElement {
         translated = true
         continue
       }
-      if (parent) {
+      if (parent && parent == elem.parentNode) {
         parent.replaceChild(copies[lang], elem)
       } else {
         elem.after(copies[lang])
@@ -259,15 +266,14 @@ class TranslateElement extends HTMLElement {
       translated = true
     }
     if (!translated) {
-      if (key) console.warn('No translations for ', key)
+      if (key) console.warn('No translations for ', key, ', ', elem)
       elem.removeAttribute(this.langAttribute) // not translated
     }
     return translated
   }
 
   setLanguage(lang, byDOM=false) {
-    // console.log('setting new language', lang)
-    if (! lang in this.languages) {
+    if (! (lang in this.languages)) {
       console.warn(`No translations for language ${lang}, reverting to ${this.previousLanguage}`)
       this.currentLanguage = this.previousLanguage
       return
