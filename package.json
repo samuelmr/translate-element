@@ -20,9 +20,5 @@
   },
   "license": "Apache-2.0",
   "author": "Samuel Rinnetmäki <samuel@iki.fi>",
-  "type": "commonjs",
-  "main": "translate-element.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  }
+  "main": "translate-element.js"
 }
