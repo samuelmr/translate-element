@@ -74,7 +74,7 @@ class TranslateElement extends HTMLElement {
             this.translateElement(elem)
           }
           catch(e) {
-            console.error(`Error translating element: `, elem, e)
+            console.warn(`Error translating element: `, elem, e)
           }
         }
         if (newLanguage && ! (newLanguage in this.languages)) {
@@ -83,7 +83,7 @@ class TranslateElement extends HTMLElement {
         }
       }
       catch(e) {
-        console.error(e)
+        console.warn(e)
         return false
       }
     }
@@ -122,6 +122,8 @@ class TranslateElement extends HTMLElement {
 }
 `
     this.appendChild(style)
+    this.setLanguage(this.currentLanguage)
+
     for (const stylesheet of document.styleSheets) {
       try {
         for (let i = 0; i < stylesheet.cssRules.length; i++) {
@@ -198,10 +200,11 @@ class TranslateElement extends HTMLElement {
     if (elem.tagName.toLowerCase() == 'title') {
       this.titles[this.previousLanguage] = elem.textContent
     }
-    // skip options in translatabe optgroups
+/*
     if (!parent && elem.parentNode && elem.parentNode.tagName.toLowerCase() == 'optgroup' && elem.parentNode.hasAttribute(this.langAttribute)) {
       return false
     }
+*/
     let key = elem.textContent
     if (elem.tagName.toLowerCase() == 'input' && this.buttonTypes.includes(elem.type.toLowerCase())) {
       key = elem.value
