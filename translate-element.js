@@ -65,11 +65,12 @@ class TranslateElement extends HTMLElement {
           Object.assign(this.translations, await resp.json()) // merge
         }
         else {
-          console.warn(`Failed to load translations from ${this.translationFile}: ${resp.status}`);
+          console.warn(`Failed to load translations from ${this.translationFile}: ${resp.status}`)
         }
-        const translatable = Array.from(document.querySelectorAll('[lang]'))
-        this.translationQueue = this.translationQueue.concat(translatable)
-        for (const elem of this.translationQueue) {
+        const langMarked = Array.from(document.querySelectorAll('[lang]'))
+        this.translationQueue = this.translationQueue.concat(langMarked)
+        while (this.translationQueue.length > 0) {
+          const elem = this.translationQueue.pop()
           try {
             this.translateElement(elem)
           }
@@ -77,7 +78,7 @@ class TranslateElement extends HTMLElement {
             console.warn(`Error translating element: `, elem, e)
           }
         }
-        if (newLanguage && ! (newLanguage in this.languages)) {
+        if (newLanguage && ! (newLanguage in this.languages) && (newLanguage != this.defaultLanguage)) {
           console.warn(`No translations for language ${newLanguage}, reverting to ${this.defaultLanguage}`)
           this.currentLanguage = this.defaultLanguage
         }
@@ -150,24 +151,43 @@ class TranslateElement extends HTMLElement {
           const addedNodes = mutation.addedNodes
           for (const node of addedNodes) {
             if (node.nodeType == 1 && node.hasAttribute(this.langAttribute) && node.getAttribute(this.langAttribute) == this.defaultLanguage) {
-              this.translateElement(node)
+              const elem = node
+              try {
+                this.translateElement(elem)
+              }
+              catch(e) {
+                console.warn(`Error translating element: `, elem, e)
+              }
             }
             else if (node.querySelectorAll) {
               const translatableChildren = node.querySelectorAll(`[${this.langAttribute}="${this.defaultLanguage}"]`) || []
-              for (const child of translatableChildren) {
-                this.translateElement(child)
+              this.translationQueue = this.translationQueue.concat(Array.from(translatableChildren))
+              while (this.translationQueue.length > 0) {
+                const elem = this.translationQueue.pop()
+                try {
+                  this.translateElement(elem)
+                }
+                catch(e) {
+                  console.warn(`Error translating element: `, elem, e)
+                }
               }
             }
           }
         }
         else if (mutation.type == 'attributes' && mutation.target.hasAttribute(this.langAttribute)) {
-          // this.translateElement(mutation.target)
+          // const elem = mutation.target
+          // try {
+          //   this.translateElement(elem)
+          // }
+          // catch(e) {
+          //   console.warn(`Error translating element: `, elem, e)
+          // }
         }
       }
     })
     this.mutationObserver.observe(document.body, mutationConfig)
     this.loadHandler = (event) => {
-      // this.setLanguage(this.currentLanguage)
+      this.setLanguage(this.currentLanguage)
     }
     window.addEventListener('load', this.loadHandler)
   }
@@ -183,6 +203,11 @@ class TranslateElement extends HTMLElement {
   }
 
   translateElement(elem, parent=null) {
+    this.languages[elem.getAttribute(this.langAttribute)] = true
+    // remove other instances in the array
+    if (this.translationQueue.includes(elem)) {
+      this.translationQueue.splice(this.translationQueue.indexOf(elem), 1)
+    }
     if (elem == this.root) {
       return false
     }
@@ -191,13 +216,16 @@ class TranslateElement extends HTMLElement {
     }
     // translate child elements first
     const translatableChildren = elem.querySelectorAll(`[${this.langAttribute}="${this.defaultLanguage}"]`)
-    for (const child of translatableChildren) {
-      this.translateElement(child)
+    this.translationQueue = this.translationQueue.concat(Array.from(translatableChildren))
+    while (this.translationQueue.length > 0) {
+      const child = this.translationQueue.pop()
+      try {
+        this.translateElement(child)
+      }
+      catch(e) {
+        console.warn(`Error translating element: `, child, e)
+      }
     }
-    if (this.translationQueue.includes(elem)) {
-      // this.translationQueue.splice(this.translationQueue.indexOf(elem), 1)
-    }
-    this.languages[elem.getAttribute(this.langAttribute)] = true
     if (elem.tagName.toLowerCase() == 'title') {
       this.titles[this.previousLanguage] = elem.textContent
     }
@@ -208,6 +236,7 @@ class TranslateElement extends HTMLElement {
     if (this.labelElements.includes(elem.tagName.toLowerCase())) {
       key = elem.label || elem.textContent
     }
+    key = key?.trim() || ''
     let copies = {}
     if (this.translations[key] !== undefined) {
       for (const lang in this.translations[key]) {
@@ -233,14 +262,19 @@ class TranslateElement extends HTMLElement {
         }
       }
     }
-    if (elem.tagName.toLowerCase() == 'title') {
-      elem.textContent = this.titles[this.currentLanguage] || this.translations[elem.textContent]?.[this.currentLanguage] || elem.textContent
+    if (elem.tagName.toLowerCase() == 'title' && this.titles[this.currentLanguage]) {
+      // elem.textContent = this.titles[this.currentLanguage] || this.translations[elem.textContent]?.[this.currentLanguage] || elem.textContent
+      elem.textContent = this.titles[this.currentLanguage]
       this.titles[this.currentLanguage] = elem.textContent
+      return true
     }
     for (const attr of this.translatableAttributes) {
-      const attrKey = elem.getAttribute(attr)
+      let attrKey = elem.getAttribute(attr)
+      if (attrKey) {
+        attrKey = attrKey.trim()
+      }
       if (this.translations[attrKey] !== undefined) {
-        // element's textContent is not in the translations but attributes might be
+        // element's textContent is not in the translations but attritutes might be
         for (const lang in this.translations[attrKey]) {
           this.languages[lang] = true
           copies[lang] = copies[lang] || this.deepCopy(elem, lang)
@@ -248,7 +282,7 @@ class TranslateElement extends HTMLElement {
         }
       }
     }
-    // see if translations already exist in the DOM
+
     const n = elem.nextElementSibling
     const l = n?.getAttribute(this.langAttribute)
     let translated = n && (n.tagName == elem.tagName) && l && (l != this.defaultLanguage)
@@ -281,8 +315,9 @@ class TranslateElement extends HTMLElement {
     this.currentLanguage = lang
     this.root.setAttribute(this.langAttribute, lang)
     const translatableTitle = document.querySelector(`title[${this.langAttribute}]`)
-    if (translatableTitle) {
-      translatableTitle.textContent = this.titles[this.currentLanguage] || translatableTitle.textContent
+    if (translatableTitle && this.titles[this.currentLanguage]) {
+      translatableTitle.textContent = this.titles[this.currentLanguage]
+      translatableTitle.lang = this.currentLanguage
     }
     if (this.css && (this.cssRuleIndex >=0)) {
       this.css.deleteRule(this.cssRuleIndex)
@@ -340,10 +375,10 @@ class TranslateElement extends HTMLElement {
         item.onclick = null
       }
     })
-    this.translationQueue = []
-    this.translations = {}
-    this.languages = {}
-    this.titles = {}
+    this.translationQueue = null
+    this.translations = null
+    this.languages = null
+    this.titles = null
     this.css = null
     this.root = null
 
