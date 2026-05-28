@@ -67,8 +67,8 @@ class TranslateElement extends HTMLElement {
         else {
           console.warn(`Failed to load translations from ${this.translationFile}: ${resp.status}`);
         }
-        const translatables = document.querySelectorAll('[lang]')
-        this.translationQueue = Array.from(document.querySelectorAll('[lang]'))
+        const translatable = Array.from(document.querySelectorAll('[lang]'))
+        this.translationQueue = this.translationQueue.concat(translatable)
         for (const elem of this.translationQueue) {
           try {
             this.translateElement(elem)
@@ -122,8 +122,6 @@ class TranslateElement extends HTMLElement {
 }
 `
     this.appendChild(style)
-    this.setLanguage(this.currentLanguage)
-
     for (const stylesheet of document.styleSheets) {
       try {
         for (let i = 0; i < stylesheet.cssRules.length; i++) {
@@ -185,26 +183,24 @@ class TranslateElement extends HTMLElement {
   }
 
   translateElement(elem, parent=null) {
-    // translate child elements first
-    const translatableChildren = elem.querySelectorAll(`[${this.langAttribute}="${this.defaultLanguage}"]`)
-    for (const child of translatableChildren) {
-      this.translateElement(child, elem)
-    }
-    if (this.translationQueue.includes(elem)) {
-      this.translationQueue.splice(this.translationQueue.indexOf(elem), 1)
-    }
-    this.languages[elem.getAttribute(this.langAttribute)] = true
     if (elem == this.root) {
       return false
     }
-    if (elem.tagName.toLowerCase() == 'title') {
-      this.titles[this.previousLanguage] = elem.textContent
-    }
-/*
     if (!parent && elem.parentNode && elem.parentNode.tagName.toLowerCase() == 'optgroup' && elem.parentNode.hasAttribute(this.langAttribute)) {
       return false
     }
-*/
+    // translate child elements first
+    const translatableChildren = elem.querySelectorAll(`[${this.langAttribute}="${this.defaultLanguage}"]`)
+    for (const child of translatableChildren) {
+      this.translateElement(child)
+    }
+    if (this.translationQueue.includes(elem)) {
+      // this.translationQueue.splice(this.translationQueue.indexOf(elem), 1)
+    }
+    this.languages[elem.getAttribute(this.langAttribute)] = true
+    if (elem.tagName.toLowerCase() == 'title') {
+      this.titles[this.previousLanguage] = elem.textContent
+    }
     let key = elem.textContent
     if (elem.tagName.toLowerCase() == 'input' && this.buttonTypes.includes(elem.type.toLowerCase())) {
       key = elem.value
@@ -315,7 +311,12 @@ class TranslateElement extends HTMLElement {
       }
     }
     for (const listener of this.listeners) {
-      if (elem[`on${listener}`]) copy[`on${listener}`] = elem[`on${listener}`]
+      if (elem[`on${listener}`]) {
+        copy[`on${listener}`] = elem[`on${listener}`]
+      }
+      if (elem.hasAttribute(listener)) {
+        copy.setAttribute(listener, elem.getAttribute(listener))
+      }
     }
     return copy
   }
@@ -339,6 +340,7 @@ class TranslateElement extends HTMLElement {
         item.onclick = null
       }
     })
+    this.translationQueue = []
     this.translations = {}
     this.languages = {}
     this.titles = {}
