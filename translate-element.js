@@ -67,76 +67,13 @@ class TranslateElement extends HTMLElement {
         else {
           console.warn(`Failed to load translations from ${this.translationFile}: ${resp.status}`)
         }
-        const langMarked = Array.from(document.querySelectorAll('[lang]'))
-        this.translationQueue = this.translationQueue.concat(langMarked)
-        while (this.translationQueue.length > 0) {
-          const elem = this.translationQueue.pop()
-          try {
-            this.translateElement(elem)
-          }
-          catch(e) {
-            console.warn(`Error translating element: `, elem, e)
-          }
-        }
-        if (newLanguage && ! (newLanguage in this.languages) && (newLanguage != this.defaultLanguage)) {
-          console.warn(`No translations for language ${newLanguage}, reverting to ${this.defaultLanguage}`)
-          this.currentLanguage = this.defaultLanguage
-        }
       }
       catch(e) {
         console.warn(e)
         return false
       }
     }
-    this.root.setAttribute(this.langAttribute, this.currentLanguage)
     
-    const langSwitcher = document.createElement('ul')
-    for (const lang in this.languages) {
-      params.set(this.langQueryParameter, lang)
-      const li = document.createElement('li')
-      const a = document.createElement('a')
-      a.textContent = lang
-      a.href = document.location.pathname + '?' + params.toString()
-      a.hreflang = lang
-      a.rel = 'alternate'
-      li.appendChild(a)
-      if (lang == this.currentLanguage) {
-        li.className = 'selected'
-      }
-      li.onclick = (e) => {
-        e.preventDefault()
-        try { // won't work with file:// URIs
-          history.replaceState({lang}, '', a.href)
-        } catch(e) { }
-        const prev = this.querySelector('li.selected')
-        prev.classList.remove('selected')
-        li.classList.add('selected')
-        this.setLanguage(lang)
-      }
-      langSwitcher.appendChild(li)
-    }
-    this.appendChild(langSwitcher)
-    const style = document.createElement("style")
-    style.textContent = `
-*[${this.langAttribute}]:not([${this.langAttribute}="${this.currentLanguage}"]) {
- display: none !important;
-}
-`
-    this.appendChild(style)
-    for (const stylesheet of document.styleSheets) {
-      try {
-        for (let i = 0; i < stylesheet.cssRules.length; i++) {
-          const rule = stylesheet.cssRules[i]
-          if (rule.selectorText == `[${this.langAttribute}]:not([${this.langAttribute}="${this.currentLanguage}"])`) {
-            this.cssRuleIndex = i
-            this.css = stylesheet
-            break
-          }
-        }
-      } catch (e) {
-        // skipping external stylesheets or those with CORS issues
-      }
-    }
     this.popstateHandler = (event) => {
       const lang = event.state?.lang
       if (lang) {
@@ -144,6 +81,7 @@ class TranslateElement extends HTMLElement {
       }
     }
     window.addEventListener("popstate", this.popstateHandler)
+
     const mutationConfig = { attributes: true, childList: true, subtree: true }
     this.mutationObserver = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
@@ -186,7 +124,76 @@ class TranslateElement extends HTMLElement {
       }
     })
     this.mutationObserver.observe(document.body, mutationConfig)
+
     this.loadHandler = (event) => {
+      const langMarked = Array.from(document.querySelectorAll(`[${this.langAttribute}]`))
+      for (const elem of langMarked) {
+        this.languages[elem.getAttribute(this.langAttribute)] = true
+      }
+      this.translationQueue = this.translationQueue.concat(langMarked)
+      while (this.translationQueue.length > 0) {
+        const elem = this.translationQueue.pop()
+        try {
+          this.translateElement(elem)
+        }
+        catch(e) {
+          console.warn(`Error translating element: `, elem, e)
+        }
+      }
+      if (newLanguage && ! (newLanguage in this.languages) && (newLanguage != this.defaultLanguage)) {
+        console.warn(`No translations for language ${newLanguage}, reverting to ${this.defaultLanguage}`)
+        this.currentLanguage = this.defaultLanguage
+      }
+      this.root.setAttribute(this.langAttribute, this.currentLanguage)
+
+      const langSwitcher = document.createElement('ul')
+      for (const lang in this.languages) {
+        params.set(this.langQueryParameter, lang)
+        const li = document.createElement('li')
+        const a = document.createElement('a')
+        a.textContent = lang
+        a.href = document.location.pathname + '?' + params.toString()
+        a.hreflang = lang
+        a.rel = 'alternate'
+        li.appendChild(a)
+        if (lang == this.currentLanguage) {
+          li.className = 'selected'
+        }
+        li.onclick = (e) => {
+          e.preventDefault()
+          try { // won't work with file:// URIs
+            history.replaceState({lang}, '', a.href)
+          } catch(e) { }
+          const prev = this.querySelector('li.selected')
+          prev.classList.remove('selected')
+          li.classList.add('selected')
+          this.setLanguage(lang)
+        }
+        langSwitcher.appendChild(li)
+      }
+      this.appendChild(langSwitcher)
+      console.log(langSwitcher)
+      const style = document.createElement("style")
+      style.textContent = `
+*[${this.langAttribute}]:not([${this.langAttribute}="${this.currentLanguage}"]) {
+ display: none !important;
+}
+`
+      this.appendChild(style)
+      for (const stylesheet of document.styleSheets) {
+        try {
+          for (let i = 0; i < stylesheet.cssRules.length; i++) {
+            const rule = stylesheet.cssRules[i]
+            if (rule.selectorText == `[${this.langAttribute}]:not([${this.langAttribute}="${this.currentLanguage}"])`) {
+              this.cssRuleIndex = i
+              this.css = stylesheet
+              break
+            }
+          }
+        } catch (e) {
+          // skipping external stylesheets or those with CORS issues
+        }
+      }
       this.setLanguage(this.currentLanguage)
     }
     window.addEventListener('load', this.loadHandler)
@@ -205,7 +212,7 @@ class TranslateElement extends HTMLElement {
   translateElement(elem, parent=null) {
     this.languages[elem.getAttribute(this.langAttribute)] = true
     // remove other instances in the array
-    if (this.translationQueue.includes(elem)) {
+    while (this.translationQueue.includes(elem)) {
       this.translationQueue.splice(this.translationQueue.indexOf(elem), 1)
     }
     if (elem == this.root) {
