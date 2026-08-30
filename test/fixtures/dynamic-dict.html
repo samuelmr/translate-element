@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Dynamic dict fixture</title>
+<script src="translate-element.js"></script>
+</head>
+<body>
+<translate-element src="translations.json"></translate-element>
+
+<h1 lang="en" id="heading">Welcome</h1>
+
+<input lang="en" id="submit-button" type="submit" value="Submit">
+<fieldset>
+  <legend>Change the submit button's action (mutates its value attribute)</legend>
+  <label><input type="radio" name="action" value="Submit" checked> Submit</label>
+  <label><input type="radio" name="action" value="Cancel"> Cancel</label>
+</fieldset>
+
+<p>Buttons below mutate the DOM below them, the same way application code would.</p>
+<button type="button" id="add-single">Add single translatable element</button>
+<button type="button" id="add-wrapper">Add wrapper with two translatable children</button>
+<button type="button" id="add-untranslated">Add element with no translation</button>
+<button type="button" id="reattach-single">Detach + reattach #dyn-single</button>
+
+<div id="mount"></div>
+
+<script>
+for (const radio of document.querySelectorAll('input[name="action"]')) {
+  radio.addEventListener('change', () => {
+    document.getElementById('submit-button').setAttribute('value', radio.value)
+  })
+}
+
+document.getElementById('add-single').addEventListener('click', () => {
+  const el = document.createElement('h2')
+  el.id = 'dyn-single'
+  el.lang = 'en'
+  el.textContent = 'Dynamic greeting'
+  document.getElementById('mount').appendChild(el)
+})
+
+document.getElementById('add-wrapper').addEventListener('click', () => {
+  const wrapper = document.createElement('div')
+  wrapper.id = 'dyn-wrapper'
+  const h3 = document.createElement('h3')
+  h3.lang = 'en'
+  h3.textContent = 'Welcome'
+  const h4 = document.createElement('h4')
+  h4.lang = 'en'
+  h4.textContent = 'Submit'
+  wrapper.append(h3, h4)
+  document.getElementById('mount').appendChild(wrapper)
+})
+
+document.getElementById('add-untranslated').addEventListener('click', () => {
+  const el = document.createElement('h2')
+  el.id = 'dyn-untranslated'
+  el.lang = 'en'
+  el.textContent = 'Nobody has this'
+  document.getElementById('mount').appendChild(el)
+})
+
+document.getElementById('reattach-single').addEventListener('click', () => {
+  const el = document.getElementById('dyn-single')
+  el.remove()
+  document.getElementById('mount').appendChild(el)
+})
+</script>
+</body>
+</html>

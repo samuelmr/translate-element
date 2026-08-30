@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Dynamic hand-authored fixture</title>
+<script src="translate-element.js"></script>
+</head>
+<body>
+<translate-element></translate-element>
+
+<h1 lang="en" id="heading-en">Welcome</h1>
+<h1 lang="sv" id="heading-sv">Välkommen</h1>
+
+<p>Buttons below mutate the DOM below them, the same way application code would.</p>
+<button type="button" id="add-pair">Add hand-authored en/fr pair</button>
+<button type="button" id="add-orphan">Add element with no counterpart</button>
+<button type="button" id="reattach-pair-en">Detach + reattach #dyn-para-en</button>
+
+<div id="mount"></div>
+
+<script>
+document.getElementById('add-pair').addEventListener('click', () => {
+  const en = document.createElement('p')
+  en.id = 'dyn-para-en'
+  en.lang = 'en'
+  en.textContent = 'Dynamic paragraph'
+  const fr = document.createElement('p')
+  fr.id = 'dyn-para-fr'
+  fr.lang = 'fr'
+  fr.textContent = 'Paragraphe dynamique'
+  document.getElementById('mount').append(en, fr)
+})
+
+document.getElementById('add-orphan').addEventListener('click', () => {
+  const el = document.createElement('p')
+  el.id = 'dyn-orphan'
+  el.lang = 'en'
+  el.textContent = 'Nobody translated this either'
+  document.getElementById('mount').appendChild(el)
+})
+
+document.getElementById('reattach-pair-en').addEventListener('click', () => {
+  const el = document.getElementById('dyn-para-en')
+  el.remove()
+  document.getElementById('mount').appendChild(el)
+})
+</script>
+</body>
+</html>

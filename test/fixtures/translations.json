@@ -1,0 +1,44 @@
+{
+  "Welcome": {
+    "sv": "Välkommen",
+    "de": "Willkommen",
+    "fr": "Bienvenue"
+  },
+  "Hello there": {
+    "sv": "Hej där",
+    "de": "Hallo da"
+  },
+  "Submit": {
+    "sv": "Skicka",
+    "de": "Senden"
+  },
+  "Enter your name": {
+    "sv": "Ange ditt namn",
+    "de": "Geben Sie Ihren Namen ein"
+  },
+  "First option": {
+    "sv": "Första alternativet",
+    "de": "Erste Option"
+  },
+  "Second option": {
+    "sv": "Andra alternativet",
+    "de": "Zweite Option"
+  },
+  "Fruit": {
+    "sv": "Frukt",
+    "de": "Obst"
+  },
+  "Page title": {
+    "sv": "Sidtitel",
+    "de": "Seitentitel"
+  },
+  "Dynamic greeting": {
+    "sv": "Dynamisk hälsning",
+    "de": "Dynamische Begrüßung",
+    "no": "Dynamisk hilsen"
+  },
+  "Cancel": {
+    "sv": "Avbryt",
+    "de": "Abbrechen"
+  }
+}
