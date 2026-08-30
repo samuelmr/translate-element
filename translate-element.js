@@ -405,16 +405,27 @@ class TranslateElement extends HTMLElement {
     this.elementClones.set(elem, Object.values(copies))
     let translated = Object.keys(copies).length > 0
     if (!translated) {
-      // no dict entry, but a hand-authored translation may already sit right after elem
-      // (see README: siblings marked with lang instead of a translations file)
-      const nextSibling = elem.nextElementSibling
-      translated = !!(nextSibling && nextSibling.hasAttribute(this.langAttribute))
+      translated = this.hasHandAuthoredTranslation(elem)
     }
     if (!translated) {
       if (key) console.warn('No translations for ', key, ', ', elem)
       elem.removeAttribute(this.langAttribute) // not translated
     }
     return translated
+  }
+
+  /**
+   * True if `elem` (which has no dict entry) already has a hand-authored translation
+   * sitting right next to it (see README: siblings marked with `lang` instead of a
+   * translations file). Authors can order these either way - the translation before or
+   * after its source - so both directions are checked; the sibling's tag name must match
+   * `elem`'s so an unrelated lang-tagged element elsewhere doesn't count as one.
+   * @param {Element} elem
+   * @returns {boolean}
+   */
+  hasHandAuthoredTranslation(elem) {
+    const isTranslationSibling = (sibling) => !!(sibling && sibling.tagName == elem.tagName && sibling.hasAttribute(this.langAttribute))
+    return isTranslationSibling(elem.nextElementSibling) || isTranslationSibling(elem.previousElementSibling)
   }
 
   /**

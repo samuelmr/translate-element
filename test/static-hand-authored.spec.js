@@ -33,9 +33,29 @@ test.describe('static HTML + hand-authored (embedded) translations', () => {
     expect(warnings.some((w) => w.includes('Nobody translated me'))).toBe(true)
   })
 
+  test('regression: detects a hand-authored translation that precedes its source in the DOM', async ({ page }) => {
+    // #submitFi (fi) sits *before* #submit (en) - the old check only ever looked at
+    // nextElementSibling, so a translation authored before its source was invisible to it
+    const warnings = []
+    page.on('console', (msg) => {
+      if (msg.type() === 'warning') warnings.push(msg.text())
+    })
+    await page.reload()
+    await page.locator('translate-element ul').waitFor()
+
+    await expect(page.locator('#submit')).toHaveAttribute('lang', 'en')
+    await expect(page.locator('#submitFi')).toHaveAttribute('lang', 'fi')
+    expect(warnings.some((w) => w.includes('Get'))).toBe(false)
+
+    // and the pair actually works when switching language
+    await page.locator('translate-element ul li a[hreflang="fi"]').click()
+    await expect(page.locator('#submitFi')).toBeVisible()
+    await expect(page.locator('#submit')).toBeHidden()
+  })
+
   test('builds a language switcher for every language found across hand-authored siblings', async ({ page }) => {
-    await expect(page.locator('translate-element ul li a')).toHaveCount(4)
-    for (const lang of ['en', 'sv', 'de', 'fr']) {
+    await expect(page.locator('translate-element ul li a')).toHaveCount(5)
+    for (const lang of ['en', 'sv', 'de', 'fr', 'fi']) {
       await expect(page.locator(`translate-element ul li a[hreflang="${lang}"]`)).toHaveCount(1)
     }
   })
