@@ -1,6 +1,6 @@
 {
   "name": "translate-element",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "description": "A simple web component for translating text content in HTML pages.",
   "keywords": [
     "translation",
@@ -20,5 +20,12 @@
   },
   "license": "Apache-2.0",
   "author": "Samuel Rinnetmäki <samuel@iki.fi>",
-  "main": "translate-element.js"
+  "main": "translate-element.js",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "http-server": "^14.1.1"
+  }
 }
