@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Nested elements + queue-sharing fixture</title>
+<script src="translate-element.js"></script>
+</head>
+<body>
+<translate-element src="nested-translations.json"></translate-element>
+
+<h2 lang="en" id="before">Before</h2>
+
+<div lang="en" id="outer-1"><span lang="en" id="inner-1">Inner one</span> and outer text one</div>
+
+<h2 lang="en" id="middle">Middle</h2>
+
+<div lang="en" id="outer-2"><span lang="en" id="inner-2">Inner two</span> and outer text two</div>
+
+<h2 lang="en" id="after">After</h2>
+</body>
+</html>

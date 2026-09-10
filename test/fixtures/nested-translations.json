@@ -1,0 +1,9 @@
+{
+  "Before": { "sv": "Före" },
+  "Inner one": { "sv": "Inre ett" },
+  "Inner one and outer text one": { "sv": "Inre och yttre text ett" },
+  "Middle": { "sv": "Mitten" },
+  "Inner two": { "sv": "Inre två" },
+  "Inner two and outer text two": { "sv": "Inre och yttre text två" },
+  "After": { "sv": "Efter" }
+}
