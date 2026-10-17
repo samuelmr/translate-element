@@ -35,8 +35,8 @@ test.describe('static HTML + translations.json + hand-authored siblings', () => 
 
   test('another source element and its clones are not mistaken for hand-authored siblings', async ({ page }) => {
     // #hello and #submit are adjacent dict-translated <p>s: each gets its own sv/de copies
-    await expect(page.locator('p[lang="sv"]')).toHaveText(['Hej där', 'Skicka'])
-    await expect(page.locator('p[lang="de"]')).toHaveText(['Hallo da', 'Senden'])
+    await expect(page.locator('body > p[lang="sv"]')).toHaveText(['Hej där', 'Skicka'])
+    await expect(page.locator('body > p[lang="de"]')).toHaveText(['Hallo da', 'Senden'])
   })
 
   test('adjacent untranslated default-language elements are not each other\'s translations', async ({ page }) => {
@@ -45,5 +45,26 @@ test.describe('static HTML + translations.json + hand-authored siblings', () => 
     await page.locator('translate-element ul li a[hreflang="sv"]').click()
     await expect(page.locator('#untranslated-a')).toBeVisible()
     await expect(page.locator('#untranslated-b')).toBeVisible()
+  })
+
+  test('translations that follow their sources belong to the nearest source before them', async ({ page }) => {
+    // the run starts with a source, so the sv paragraph is #follow-a's, not #follow-b's -
+    // #follow-b ("Hello there") still gets its sv copy from the dict, but not a second de
+    await expect(page.locator('#follow p[lang="sv"]')).toHaveText(['Eget A', 'Hej där'])
+    await expect(page.locator('#follow p[lang="de"]')).toHaveText(['Eigen B'])
+  })
+
+  test('translations that precede their sources belong to the nearest source after them', async ({ page }) => {
+    await expect(page.locator('#precede p[lang="sv"]')).toHaveText(['Hand hej', 'Hand välkommen'])
+    await expect(page.locator('#precede p[lang="de"]')).toHaveText(['Hallo da', 'Willkommen'])
+    await expect(page.locator('#precede p[lang="fr"]')).toHaveText(['Bienvenue'])
+  })
+
+  test('an untranslated element next to another source\'s translation stays hidden in that language', async ({ page }) => {
+    // like any lang-aware renderer: the sv view shows only the sv paragraph
+    await expect(page.locator('#group-a')).toHaveAttribute('lang', 'en')
+    await expect(page.locator('#group-b')).toHaveAttribute('lang', 'en')
+    await page.locator('translate-element ul li a[hreflang="sv"]').click()
+    await expect(page.locator('#group p:visible')).toHaveText(['Grupp C'])
   })
 })

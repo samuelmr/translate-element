@@ -355,10 +355,11 @@ class TranslateElement extends HTMLElement {
   /**
    * Translates a single default-language element: for each language with a matching
    * dictionary entry (by text content or a translatable attribute), inserts a translated
-   * clone right after `elem` - unless a hand-authored sibling already covers that
-   * language, which then wins over the dictionary. If neither exists for any language,
-   * strips `elem`'s `lang` attribute so it always displays regardless of the selected
-   * language.
+   * clone right after `elem` - unless one of `elem`'s own hand-authored siblings already
+   * covers that language, which then wins over the dictionary. If `elem` has no
+   * translation at all, it warns, and unless the element has the `strict` attribute or
+   * hand-authored translations sit next to `elem` (see siblingTranslations()), strips
+   * `elem`'s `lang` attribute so it always displays regardless of the selected language.
    *
    * Idempotent per element: repeat calls (e.g. from a DOM move re-triggering the
    * MutationObserver) are no-ops unless `processedElements` was explicitly cleared first
@@ -411,7 +412,7 @@ class TranslateElement extends HTMLElement {
       key = elem.label || elem.textContent
     }
     key = key?.trim() || ''
-    const handAuthored = this.handAuthoredLanguages(elem)
+    const { own: handAuthored, anyLanguage } = this.siblingTranslations(elem)
     let copies = {}
     if (this.translations[key] !== undefined) {
       for (const lang in this.translations[key]) {
@@ -473,37 +474,64 @@ class TranslateElement extends HTMLElement {
     const translated = Object.keys(copies).length > 0 || handAuthored.size > 0
     if (!translated) {
       if (key) console.warn('No translations for ', key, ', ', elem)
-      elem.removeAttribute(this.langAttribute) // not translated
+      if (!this.hasAttribute('strict') && !anyLanguage) {
+        elem.removeAttribute(this.langAttribute) // not translated, so always shown
+      }
     }
     return translated
   }
 
   /**
-   * The languages `elem` already has hand-authored translations for (see README: siblings
-   * marked with `lang` instead of a translations file). Authors can order these either
-   * way - translations before or after their source - so the run of adjacent siblings is
-   * followed in both directions. A sibling counts only if its tag name matches `elem`'s
-   * and it is tagged with another language; the run ends at anything else, at another
-   * default-language source element, or at a clone made for some other source, so
-   * neither of those is mistaken for one of `elem`'s translations.
+   * Hand-authored translations (see README: siblings marked with `lang` instead of a
+   * translations file) are the other-language elements in the same run of adjacent,
+   * same-tag, lang-tagged siblings as `elem`. Clones made by cloneForLanguage() are
+   * skipped over, so they neither count nor split a run.
+   *
+   * Which source element a translation belongs to depends on how the run is written: if
+   * it starts with a source (a default-language element), translations follow their
+   * source; if it starts with a translation, they precede it. Translations past the last
+   * source belong to that last source.
    * @param {Element} elem
-   * @returns {Set<string>}
+   * @returns {{own: Set<string>, anyLanguage: boolean}} `own`: the languages of `elem`'s
+   *   own translations; `anyLanguage`: whether the run holds any other-language element
    */
-  handAuthoredLanguages(elem) {
-    const languages = new Set()
-    const isTranslationSibling = (sibling) => !!(sibling
-      && sibling.tagName == elem.tagName
-      && sibling.hasAttribute(this.langAttribute)
-      && sibling.getAttribute(this.langAttribute) != this.defaultLanguage
-      && !this.clones.has(sibling))
-    for (const direction of ['nextElementSibling', 'previousElementSibling']) {
-      let sibling = elem[direction]
-      while (isTranslationSibling(sibling)) {
-        languages.add(sibling.getAttribute(this.langAttribute))
-        sibling = sibling[direction]
+  siblingTranslations(elem) {
+    const isMember = (sibling) => sibling.tagName == elem.tagName && sibling.hasAttribute(this.langAttribute)
+    const walk = (direction) => {
+      const found = []
+      for (let sibling = elem[direction]; sibling; sibling = sibling[direction]) {
+        if (this.clones.has(sibling)) {
+          continue
+        }
+        if (!isMember(sibling)) {
+          break
+        }
+        found.push(sibling)
+      }
+      return found
+    }
+    const before = walk('previousElementSibling').reverse()
+    const run = [...before, elem, ...walk('nextElementSibling')]
+    const isSource = (member) => member.getAttribute(this.langAttribute) == this.defaultLanguage
+    const owned = []
+    const index = before.length
+    if (isSource(run[0])) {
+      for (let i = index + 1; i < run.length && !isSource(run[i]); i++) {
+        owned.push(run[i])
       }
     }
-    return languages
+    else {
+      for (let i = index - 1; i >= 0 && !isSource(run[i]); i--) {
+        owned.push(run[i])
+      }
+      if (!run.slice(index + 1).some(isSource)) {
+        owned.push(...run.slice(index + 1))
+      }
+    }
+    return {
+      own: new Set(owned.map((member) => member.getAttribute(this.langAttribute))),
+      anyLanguage: run.some((member) => !isSource(member)),
+    }
   }
 
   /**
