@@ -54,10 +54,10 @@
         "fi": "Perusasetukset",
         "sv": "Grundläggande inställningar"
     },
-    "1. Include the JavaScript code in your HTML:": {
-        "de": "1. Binden Sie den JavaScript-Code in Ihr HTML ein:",
-        "fi": "1. Sisällytä JavaScript-koodi HTML-tiedostoosi:",
-        "sv": "1. Inkludera JavaScript-koden i din HTML:"
+    "1. Include the CSS and JavaScript files in your HTML:": {
+        "de": "1. Binden Sie die CSS- und JavaScript-Dateien in Ihr HTML ein:",
+        "fi": "1. Sisällytä CSS- ja JavaScript-tiedostot HTML-tiedostoosi:",
+        "sv": "1. Inkludera CSS- och JavaScript-filerna i din HTML:"
     },
     "2. Add the translate element to your page:": {
         "de": "2. Fügen Sie das Übersetzungselement zu Ihrer Seite hinzu:",
@@ -136,12 +136,132 @@
     },
     "If the HTML content contains an element with the lang attribute, but no translations are found in the translations.json file, the web component will output the textContent of the untranslated element into the developer console.": {
         "de": "Wenn der HTML-Inhalt ein Element mit dem Attribut <code>lang</code> enthält, aber keine Übersetzungen in der Datei <code>translations.json</code> gefunden werden, gibt die Webkomponente den <code>textContent</code> des nicht übersetzten Elements in der Entwicklertools-Konsole aus.",
-        "fi": "Jos HTML-sisältö sisältää elementin, jossa on <code>lang</code>-attribuutti, mutta käännöksiä ei löydy tiedostosta <code>translations.json</code>, komponentti tulostaa käännetyn elementin <code>textContent</code>-sisällön kehittäjäkonsoliin.",
+        "fi": "Jos HTML-sisältö sisältää elementin, jossa on <code>lang</code>-attribuutti, mutta käännöksiä ei löydy tiedostosta <code>translations.json</code>, komponentti tulostaa kääntämättömän elementin <code>textContent</code>-sisällön kehittäjäkonsoliin.",
         "sv": "Om HTML-innehållet innehåller ett element med attributet <code>lang</code>, men inga översättningar hittas i filen <code>translations.json</code>, kommer webbkomponenten att skriva ut <code>textContent</code> för det oöversatta elementet i utvecklarkonsolen."
     },
     "Complete Example": {
         "de": "Vollständiges Beispiel",
         "fi": "Kokonainen esimerkki",
         "sv": "Komplett exempel"
+    },
+    "Language selection": {
+        "de": "Sprachauswahl",
+        "fi": "Kielen valinta",
+        "sv": "Språkval"
+    },
+    "Remembering the language": {
+        "de": "Die Sprache merken",
+        "fi": "Kielen muistaminen",
+        "sv": "Komma ihåg språket"
+    },
+    "By default the chosen language lives only in the ?lang= query parameter, so it is lost when the visitor follows a link to another page. Add the persist attribute to remember the choice made with the switcher in localStorage.": {
+        "de": "Standardmäßig steht die gewählte Sprache nur im Abfrageparameter <code>?lang=</code> und geht verloren, sobald der Besucher einem Link zu einer anderen Seite folgt. Fügen Sie das Attribut <code>persist</code> hinzu, damit die mit dem Sprachumschalter getroffene Wahl in <code>localStorage</code> gespeichert wird.",
+        "fi": "Oletuksena valittu kieli on vain <code>?lang=</code>-kyselyparametrissa, joten se katoaa, kun kävijä seuraa linkkiä toiselle sivulle. Lisää <code>persist</code>-attribuutti, niin kielenvaihtajalla tehty valinta muistetaan <code>localStorage</code>-tallennustilassa.",
+        "sv": "Som standard finns det valda språket bara i frågeparametern <code>?lang=</code>, så det går förlorat när besökaren följer en länk till en annan sida. Lägg till attributet <code>persist</code> för att komma ihåg valet som gjorts med språkväljaren i <code>localStorage</code>."
+    },
+    "To start in the browser's language for first-time visitors, add prefer-browser-language as well:": {
+        "de": "Damit Erstbesucher in der Sprache ihres Browsers starten, fügen Sie zusätzlich <code>prefer-browser-language</code> hinzu:",
+        "fi": "Jos haluat näyttää sisällön selaimen oletuskielellä ensikertalaisille, lisää myös <code>prefer-browser-language</code>:",
+        "sv": "Om förstagångsbesökare ska börja på webbläsarens språk, lägg också till <code>prefer-browser-language</code>:"
+    },
+    "The language shown on load is the first of these that the page has content for:": {
+        "de": "Beim Laden wird die erste dieser Sprachen angezeigt, für die die Seite Inhalte hat:",
+        "fi": "Käytettävä kieli valitaan tässä järjestyksessä:",
+        "sv": "Språket som visas vid laddning är det första av dessa som sidan har innehåll för:"
+    },
+    "The ?lang= query parameter. It is never stored, so a shared link does not change the visitor's own preference.": {
+        "de": "Der Abfrageparameter <code>?lang=</code>. Er wird nie gespeichert, ein geteilter Link ändert also nicht die eigene Wahl des Besuchers.",
+        "fi": "<code>?lang=</code>-kyselyparametri. Sitä ei tallenneta, joten jaettu linkki ei muuta kävijän valintaa.",
+        "sv": "Frågeparametern <code>?lang=</code>. Den lagras aldrig, så en delad länk ändrar inte besökarens eget val."
+    },
+    "The stored choice (persist).": {
+        "de": "Die gespeicherte Wahl (<code>persist</code>).",
+        "fi": "Tallennettu valinta (<code>persist</code>).",
+        "sv": "Det lagrade valet (<code>persist</code>)."
+    },
+    "The browser's preferred languages (prefer-browser-language). A regional tag such as fi-FI matches fi.": {
+        "de": "Die bevorzugten Sprachen des Browsers (<code>prefer-browser-language</code>). Ein regionales Kürzel wie <code>fi-FI</code> passt zu <code>fi</code>.",
+        "fi": "Selaimen suosimat kielet (<code>prefer-browser-language</code>). Alueellinen tunniste, kuten <code>fi-FI</code>, vastaa kieltä <code>fi</code>.",
+        "sv": "Webbläsarens föredragna språk (<code>prefer-browser-language</code>). En regional kod som <code>fi-FI</code> matchar <code>fi</code>."
+    },
+    "The page's own language.": {
+        "de": "Die eigene Sprache der Seite.",
+        "fi": "Sivun oma kieli.",
+        "sv": "Sidans eget språk."
+    },
+    "If localStorage is not available, the choice is not remembered.": {
+        "de": "Ist <code>localStorage</code> nicht verfügbar, wird die Wahl nicht gespeichert.",
+        "fi": "Jos <code>localStorage</code> ei ole käytettävissä, valintaa ei  muisteta.",
+        "sv": "Om <code>localStorage</code> inte är tillgängligt kommer valet inte att sparas."
+    },
+    "Source language": {
+        "de": "Ausgangssprache",
+        "fi": "Lähdekieli",
+        "sv": "Källspråk"
+    },
+    "The language of the content you author is taken from the lang attribute of the nearest ancestor of <translate-element> (usually <html lang=\"en\">). If there is none, the default attribute is used, and otherwise en.": {
+        "de": "Die Sprache der von Ihnen verfassten Inhalte stammt aus dem Attribut <code>lang</code> des nächsten Vorfahren von <code>&lt;translate-element&gt;</code> (meist <code>&lt;html lang=\"en\"&gt;</code>). Gibt es keinen, wird das Attribut <code>default</code> verwendet, sonst <code>en</code>.",
+        "fi": "Kirjoittamasi sisällön kieli otetaan <code>&lt;translate-element&gt;</code>-elementin lähimmän esivanhemman <code>lang</code>-attribuutista (yleensä <code>&lt;html lang=\"en\"&gt;</code>). Jos sellaista ei ole, käytetään <code>default</code>-attribuuttia, ja muuten kieltä <code>en</code>.",
+        "sv": "Språket på innehållet du skriver hämtas från attributet <code>lang</code> hos närmaste förfader till <code>&lt;translate-element&gt;</code> (oftast <code>&lt;html lang=\"en\"&gt;</code>). Om det saknas används attributet <code>default</code>, och annars <code>en</code>."
+    },
+    "Switching language from script": {
+        "de": "Sprache per Skript wechseln",
+        "fi": "Kielen vaihtaminen skriptistä",
+        "sv": "Byta språk från skript"
+    },
+    "Set the current attribute to switch the language, and listen to the bubbling languagechange event to react to changes. The event is dispatched once per change, also for the initial choice on load, with the new and the previous language in detail. The lang attribute of <html> is kept up to date too, so you can style on :root[lang=\"sv\"] or observe it with a MutationObserver.": {
+        "de": "Setzen Sie das Attribut <code>current</code>, um die Sprache zu wechseln, und lauschen Sie auf das aufsteigende Ereignis <code>languagechange</code>, um auf Änderungen zu reagieren. Das Ereignis wird einmal pro Änderung ausgelöst, auch für die erste Wahl beim Laden, und <code>detail</code> enthält die neue und die vorherige Sprache. Auch das Attribut <code>lang</code> von <code>&lt;html&gt;</code> wird aktuell gehalten, sodass Sie mit <code>:root[lang=\"sv\"]</code> gestalten oder es mit einem <code>MutationObserver</code> beobachten können.",
+        "fi": "Vaihda kieli asettamalla <code>current</code>-attribuutti. Voit reagoida kielen muutoksiin kuuntelemalla kuplivaa <code>languagechange</code>-tapahtumaa. Tapahtuma lähetetään kerran jokaisesta muutoksesta, myös latautumisen yhteydessä tehdystä alkuvalinnasta, ja <code>detail</code> sisältää uuden ja edellisen kielen. Myös <code>&lt;html&gt;</code>-elementin <code>lang</code>-attribuutti pidetään ajan tasalla, joten voit tyylitellä <code>:root[lang=\"sv\"]</code>-valitsimella tai seurata sitä <code>MutationObserver</code>-oliolla.",
+        "sv": "Sätt attributet <code>current</code> för att byta språk och lyssna på den bubblande händelsen <code>languagechange</code> för att reagera på ändringar. Händelsen skickas en gång per ändring, även för det första valet vid laddning, med det nya och det tidigare språket i <code>detail</code>. Attributet <code>lang</code> på <code>&lt;html&gt;</code> hålls också uppdaterat, så du kan formatera med <code>:root[lang=\"sv\"]</code> eller observera det med en <code>MutationObserver</code>."
+    },
+    "Good to know": {
+        "de": "Gut zu wissen",
+        "fi": "Hyvä tietää",
+        "sv": "Bra att veta"
+    },
+    "The switcher is a ul of li items with an a link (hreflang, rel=\"alternate\") in each. The active item has the class selected. Clicking one updates ?lang= in the address bar without reloading the page, except on file:// pages.": {
+        "de": "Der Umschalter ist eine <code>ul</code>-Liste mit <code>li</code>-Einträgen, die jeweils einen <code>a</code>-Link enthalten (<code>hreflang</code>, <code>rel=\"alternate\"</code>). Der aktive Eintrag hat die Klasse <code>selected</code>. Ein Klick aktualisiert <code>?lang=</code> in der Adressleiste, ohne die Seite neu zu laden, außer bei <code>file://</code>-Seiten.",
+        "fi": "Kielenvaihtaja on <code>ul</code>-lista, jonka <code>li</code>-kohteissa on kussakin <code>a</code>-linkki (<code>hreflang</code>, <code>rel=\"alternate\"</code>). Aktiivisella kohteella on luokka <code>selected</code>. Klikkaus päivittää osoiterivin <code>?lang=</code>-parametrin lataamatta sivua uudelleen, paitsi <code>file://</code>-sivuilla.",
+        "sv": "Språkväljaren är en <code>ul</code>-lista med <code>li</code>-poster som var och en har en <code>a</code>-länk (<code>hreflang</code>, <code>rel=\"alternate\"</code>). Den aktiva posten har klassen <code>selected</code>. Ett klick uppdaterar <code>?lang=</code> i adressfältet utan att sidan laddas om, utom på <code>file://</code>-sidor."
+    },
+    "An element with a lang attribute but no translation loses the attribute, so it is shown in every language.": {
+        "de": "Ein Element mit dem Attribut <code>lang</code>, aber ohne Übersetzung verliert das Attribut und wird daher in jeder Sprache angezeigt.",
+        "fi": "Elementti, jolla on <code>lang</code>-attribuutti mutta ei käännöstä, menettää attribuutin, joten se näytetään kaikilla kielillä.",
+        "sv": "Ett element med attributet <code>lang</code> men utan översättning förlorar attributet, så det visas på alla språk."
+    },
+    "Translations in the JSON file are inserted as HTML, so you can use tags such as <code>. Only use translations you trust.": {
+        "de": "Übersetzungen in der JSON-Datei werden als HTML eingefügt, Sie können also Tags wie <code>&lt;code&gt;</code> verwenden. Verwenden Sie nur vertrauenswürdige Übersetzungen.",
+        "fi": "JSON-tiedoston käännökset lisätään HTML:nä, joten voit käyttää esimerkiksi <code>&lt;code&gt;</code>-tageja. Käytä vain luotettavia käännöksiä.",
+        "sv": "Översättningar i JSON-filen infogas som HTML, så du kan använda taggar som <code>&lt;code&gt;</code>. Använd bara översättningar du litar på."
+    },
+    "Translated copies keep the inline event handlers of the original, and their id gets a language suffix, such as heading-sv.": {
+        "de": "Übersetzte Kopien behalten die Inline-Ereignishandler des Originals, und ihre <code>id</code> erhält ein Sprachsuffix, zum Beispiel <code>heading-sv</code>.",
+        "fi": "Käännetyt kopiot säilyttävät alkuperäisen rivinsisäiset tapahtumankäsittelijät, ja niiden <code>id</code>:hen lisätään kielipääte, esimerkiksi <code>heading-sv</code>.",
+        "sv": "Översatta kopior behåller originalets inbäddade händelsehanterare, och deras <code>id</code> får ett språksuffix, till exempel <code>heading-sv</code>."
+    },
+    "The label of option and optgroup elements is translated, including options inside an optgroup, and the selected option stays selected when the language changes.": {
+        "de": "Das <code>label</code> von <code>option</code>- und <code>optgroup</code>-Elementen wird übersetzt, auch bei Optionen innerhalb einer <code>optgroup</code>, und die gewählte Option bleibt beim Sprachwechsel ausgewählt.",
+        "fi": "<code>option</code>- ja <code>optgroup</code>-elementtien <code>label</code> käännetään, myös <code>optgroup</code>-elementin sisällä olevien valintojen, ja valittu vaihtoehto pysyy valittuna kieltä vaihdettaessa.",
+        "sv": "<code>label</code> hos <code>option</code>- och <code>optgroup</code>-element översätts, även alternativ inuti en <code>optgroup</code>, och det valda alternativet förblir valt när språket byts."
+    },
+    "A title element with a lang attribute is translated too.": {
+        "de": "Auch ein <code>title</code>-Element mit dem Attribut <code>lang</code> wird übersetzt.",
+        "fi": "Myös <code>title</code>-elementti, jolla on <code>lang</code>-attribuutti, käännetään.",
+        "sv": "Ett <code>title</code>-element med attributet <code>lang</code> översätts också."
+    },
+    "When an element in a new language is added to the page later, the language is added to the switcher.": {
+        "de": "Wird der Seite später ein Element in einer neuen Sprache hinzugefügt, wird die Sprache dem Umschalter hinzugefügt.",
+        "fi": "Kun sivulle lisätään myöhemmin elementti uudella kielellä, kieli lisätään kielenvaihtajaan.",
+        "sv": "När ett element på ett nytt språk läggs till på sidan senare läggs språket till i språkväljaren."
+    },
+    "Remembers the chosen language across pages (persist) and can follow the browser's language": {
+        "de": "Merkt sich die gewählte Sprache seitenübergreifend (<code>persist</code>) und kann der Browsersprache folgen",
+        "fi": "Muistaa valitun kielen sivulta toiselle (<code>persist</code>) ja voi noudattaa selaimen kieltä",
+        "sv": "Kommer ihåg det valda språket mellan sidor (<code>persist</code>) och kan följa webbläsarens språk"
+    },
+    "Dispatches a languagechange event when the language changes": {
+        "de": "Sendet ein <code>languagechange</code>-Ereignis, wenn sich die Sprache ändert",
+        "fi": "Lähettää <code>languagechange</code>-tapahtuman, kun kieli vaihtuu",
+        "sv": "Skickar en <code>languagechange</code>-händelse när språket ändras"
     }
 }

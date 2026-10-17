@@ -17,7 +17,7 @@ body {
     margin: 0;
     padding: 1em;
 }
-h1, h2, h3, h4, p, pre, ul {
+h1, h2, h3, h4, p, pre, ol, ul {
     max-width: 50rem;
     margin-left: auto;
     margin-right: auto;
