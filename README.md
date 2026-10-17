@@ -49,4 +49,29 @@ Author your HTML content in any language. Mark the translatable sections with th
 <h1 lang="en">Welcome</h1>
 ```
 
+## Remembering the language across pages
+
+By default the chosen language lives only in the `?lang=` query parameter, so it is lost when the visitor follows a link to another page. Add the `persist` attribute to remember the choice made with the switcher in `localStorage` (key `translate-element:lang`):
+
+```html
+<translate-element persist prefer-browser-language src="translations.json"></translate-element>
+```
+
+The language shown on load is the first of these that the page has content for:
+
+1. the `?lang=` query parameter (it is never stored, so a shared link doesn't change the visitor's own preference),
+2. the stored choice (`persist`),
+3. the browser's preferred languages, `navigator.languages` (`prefer-browser-language`; `fi-FI` matches `fi`),
+4. the page's own language.
+
+If `localStorage` is unavailable, the choice is simply not remembered.
+
+## Events
+
+`<translate-element>` dispatches a bubbling `languagechange` event whenever the displayed language changes, including the initial choice on load, with `detail: { language, previousLanguage }`. The `lang` attribute of `<html>` is also kept up to date, so a `MutationObserver` on it keeps working.
+
+```js
+document.addEventListener('languagechange', (e) => console.log(e.detail.language))
+```
+
 See [documentation](https://samuelmr.github.io/translate-element/) for further instructions.

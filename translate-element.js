@@ -21,6 +21,7 @@ class TranslateElement extends HTMLElement {
     this.langAttribute = 'lang'
     this.componentClassName = 'translate-element'
     this.langQueryParameter = 'lang'
+    this.storageKey = 'translate-element:lang'
     this.currentLanguage = this.defaultLanguage
     this.rootElement = document.querySelector(':root')
     this.languages = {}
@@ -81,8 +82,22 @@ class TranslateElement extends HTMLElement {
     this.setAttribute('default', this.defaultLanguage)
     this.searchParams = new URLSearchParams(document.location.search)
     const newLanguage = this.searchParams.get(this.langQueryParameter)
+    // order of precedence: ?lang= > the stored choice (`persist`) > the browser's
+    // languages (`prefer-browser-language`) > the page's own language. Which of the
+    // candidates exists can only be decided once the languages are known, in loadHandler.
+    const languageCandidates = []
     if (newLanguage) {
+      languageCandidates.push(newLanguage)
       this.currentLanguage = newLanguage
+    }
+    if (this.hasAttribute('persist')) {
+      const stored = this.readStoredLanguage()
+      if (stored) {
+        languageCandidates.push(stored)
+      }
+    }
+    if (this.hasAttribute('prefer-browser-language')) {
+      languageCandidates.push(...(navigator.languages || []))
     }
     // start the fetch but don't await it yet: awaiting here would delay registering the
     // window 'load' listener below, and on a fast-loading page 'load' can fire (and be
@@ -188,8 +203,8 @@ class TranslateElement extends HTMLElement {
       }
       if (newLanguage && ! (newLanguage in this.languages) && (newLanguage != this.defaultLanguage)) {
         console.warn(`No translations for language ${newLanguage}, reverting to ${this.defaultLanguage}`)
-        this.currentLanguage = this.defaultLanguage
       }
+      this.currentLanguage = this.pickLanguage(languageCandidates)
       this.rootElement.setAttribute(this.langAttribute, this.currentLanguage)
 
       this.languageSwitcher = document.createElement('ul')
@@ -240,6 +255,47 @@ class TranslateElement extends HTMLElement {
   }
 
   /**
+   * Returns the first of `candidates` that is the default language or one found on the
+   * page, else the default language. A candidate may be a full tag such as `fi-FI`, which
+   * matches the language `fi` when there is no `fi-FI` content.
+   * @param {string[]} candidates
+   * @returns {string}
+   */
+  pickLanguage(candidates) {
+    const available = (lang) => lang == this.defaultLanguage || lang in this.languages
+    for (const candidate of candidates) {
+      if (available(candidate)) {
+        return candidate
+      }
+      const primary = candidate.split('-')[0]
+      if (available(primary)) {
+        return primary
+      }
+    }
+    return this.defaultLanguage
+  }
+
+  /**
+   * localStorage is unavailable in some privacy modes and for file:// URIs, so every
+   * access is guarded: persistence then silently does nothing.
+   * @returns {string|null}
+   */
+  readStoredLanguage() {
+    try {
+      return localStorage.getItem(this.storageKey)
+    } catch(e) {
+      return null
+    }
+  }
+
+  /** @param {string} lang */
+  storeLanguage(lang) {
+    try {
+      localStorage.setItem(this.storageKey, lang)
+    } catch(e) { }
+  }
+
+  /**
    * Records that `lang` exists and, once the switcher has been built, keeps it in sync -
    * a language discovered after the initial load (e.g. a hand-authored variant or a dict
    * entry found while translating dynamically added content) gets its own switcher entry
@@ -282,6 +338,9 @@ class TranslateElement extends HTMLElement {
       try { // won't work with file:// URIs
         history.replaceState({lang}, '', a.href)
       } catch(e) { }
+      if (this.hasAttribute('persist')) {
+        this.storeLanguage(lang)
+      }
       const prev = this.querySelector('li.selected')
       prev.classList.remove('selected')
       li.classList.add('selected')
@@ -474,6 +533,15 @@ class TranslateElement extends HTMLElement {
     }
     if (!fromAttributeChange) {
       this.setAttribute('current', lang)
+    }
+    // setting `current` above re-enters this method, so announce each change only once
+    if (this.announcedLanguage != lang) {
+      const previousLanguage = this.announcedLanguage
+      this.announcedLanguage = lang
+      this.dispatchEvent(new CustomEvent('languagechange', {
+        bubbles: true,
+        detail: { language: lang, previousLanguage }
+      }))
     }
   }
 
