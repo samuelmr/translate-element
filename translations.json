@@ -50,7 +50,7 @@
         "sv": "Användning"
     },
     "Basic Setup": {
-        "de":"Verwendung",
+        "de": "Grundeinrichtung",
         "fi": "Perusasetukset",
         "sv": "Grundläggande inställningar"
     },
@@ -189,7 +189,7 @@
         "fi": "Sivun oma kieli.",
         "sv": "Sidans eget språk."
     },
-    "If localStorage is not available, the choice is not remembered.": {
+    "If localStorage is not available, the choice is simply not remembered.": {
         "de": "Ist <code>localStorage</code> nicht verfügbar, wird die Wahl nicht gespeichert.",
         "fi": "Jos <code>localStorage</code> ei ole käytettävissä, valintaa ei  muisteta.",
         "sv": "Om <code>localStorage</code> inte är tillgängligt kommer valet inte att sparas."
@@ -223,11 +223,6 @@
         "de": "Der Umschalter ist eine <code>ul</code>-Liste mit <code>li</code>-Einträgen, die jeweils einen <code>a</code>-Link enthalten (<code>hreflang</code>, <code>rel=\"alternate\"</code>). Der aktive Eintrag hat die Klasse <code>selected</code>. Ein Klick aktualisiert <code>?lang=</code> in der Adressleiste, ohne die Seite neu zu laden, außer bei <code>file://</code>-Seiten.",
         "fi": "Kielenvaihtaja on <code>ul</code>-lista, jonka <code>li</code>-kohteissa on kussakin <code>a</code>-linkki (<code>hreflang</code>, <code>rel=\"alternate\"</code>). Aktiivisella kohteella on luokka <code>selected</code>. Klikkaus päivittää osoiterivin <code>?lang=</code>-parametrin lataamatta sivua uudelleen, paitsi <code>file://</code>-sivuilla.",
         "sv": "Språkväljaren är en <code>ul</code>-lista med <code>li</code>-poster som var och en har en <code>a</code>-länk (<code>hreflang</code>, <code>rel=\"alternate\"</code>). Den aktiva posten har klassen <code>selected</code>. Ett klick uppdaterar <code>?lang=</code> i adressfältet utan att sidan laddas om, utom på <code>file://</code>-sidor."
-    },
-    "An element with a lang attribute but no translation loses the attribute, so it is shown in every language.": {
-        "de": "Ein Element mit dem Attribut <code>lang</code>, aber ohne Übersetzung verliert das Attribut und wird daher in jeder Sprache angezeigt.",
-        "fi": "Elementti, jolla on <code>lang</code>-attribuutti mutta ei käännöstä, menettää attribuutin, joten se näytetään kaikilla kielillä.",
-        "sv": "Ett element med attributet <code>lang</code> men utan översättning förlorar attributet, så det visas på alla språk."
     },
     "Translations in the JSON file are inserted as HTML, so you can use tags such as <code>. Only use translations you trust.": {
         "de": "Übersetzungen in der JSON-Datei werden als HTML eingefügt, Sie können also Tags wie <code>&lt;code&gt;</code> verwenden. Verwenden Sie nur vertrauenswürdige Übersetzungen.",
@@ -263,5 +258,75 @@
         "de": "Sendet ein <code>languagechange</code>-Ereignis, wenn sich die Sprache ändert",
         "fi": "Lähettää <code>languagechange</code>-tapahtuman, kun kieli vaihtuu",
         "sv": "Skickar en <code>languagechange</code>-händelse när språket ändras"
+    },
+    "Embedded translations and a translation file can be combined": {
+        "de": "Eingebettete Übersetzungen und eine Übersetzungsdatei lassen sich kombinieren",
+        "fi": "Upotetut käännökset ja käännöstiedosto voidaan yhdistää",
+        "sv": "Inbäddade översättningar och en översättningsfil kan kombineras"
+    },
+    "Combining both": {
+        "de": "Beides kombinieren",
+        "fi": "Molempien yhdistäminen",
+        "sv": "Kombinera båda"
+    },
+    "You can use embedded translations and a translation file on the same page. An embedded translation wins for its own language, and the file fills in the other languages. Here Swedish comes from the HTML and the other languages from the file:": {
+        "de": "Sie können eingebettete Übersetzungen und eine Übersetzungsdatei auf derselben Seite verwenden. Eine eingebettete Übersetzung hat für ihre eigene Sprache Vorrang, die Datei ergänzt die übrigen Sprachen. Hier kommt Schwedisch aus dem HTML und die übrigen Sprachen aus der Datei:",
+        "fi": "Voit käyttää samalla sivulla sekä upotettuja käännöksiä että käännöstiedostoa. Upotettu käännös voittaa omalla kielellään, ja tiedosto täydentää muut kielet. Tässä ruotsi tulee HTML:stä ja muut kielet tiedostosta:",
+        "sv": "Du kan använda inbäddade översättningar och en översättningsfil på samma sida. En inbäddad översättning går före för sitt eget språk, och filen fyller i de övriga språken. Här kommer svenska från HTML och de övriga språken från filen:"
+    },
+    "Embedded translations are the elements in other languages among adjacent siblings that have the same tag name and a lang attribute. Each translation belongs to one element: if the group starts with an element in the page's language, translations follow their element; if it starts with a translation, they precede it.": {
+        "de": "Eingebettete Übersetzungen sind die Elemente in anderen Sprachen unter benachbarten Geschwisterelementen mit demselben Tag-Namen und einem <code>lang</code>-Attribut. Jede Übersetzung gehört zu genau einem Element: Beginnt die Gruppe mit einem Element in der Sprache der Seite, folgen die Übersetzungen ihrem Element; beginnt sie mit einer Übersetzung, stehen sie davor.",
+        "fi": "Upotettuja käännöksiä ovat muunkieliset elementit vierekkäisten sisarelementtien joukossa, joilla on sama tagin nimi ja <code>lang</code>-attribuutti. Kukin käännös kuuluu yhdelle elementille: jos ryhmä alkaa sivun kielisellä elementillä, käännökset tulevat elementtinsä jälkeen; jos se alkaa käännöksellä, ne tulevat ennen sitä.",
+        "sv": "Inbäddade översättningar är elementen på andra språk bland intilliggande syskon med samma taggnamn och ett <code>lang</code>-attribut. Varje översättning hör till ett element: om gruppen börjar med ett element på sidans språk följer översättningarna efter sitt element; om den börjar med en översättning står de före det."
+    },
+    "Untranslated content": {
+        "de": "Nicht übersetzte Inhalte",
+        "fi": "Kääntämätön sisältö",
+        "sv": "Oöversatt innehåll"
+    },
+    "An element with a lang attribute but no translation of its own is reported in the console. By default it also loses the attribute, so it is shown in every language: a missing entry in the translation file then shows up as untranslated text instead of hiding a button or an input field.": {
+        "de": "Ein Element mit einem <code>lang</code>-Attribut, aber ohne eigene Übersetzung wird in der Konsole gemeldet. Standardmäßig verliert es außerdem das Attribut und wird daher in jeder Sprache angezeigt: Ein fehlender Eintrag in der Übersetzungsdatei erscheint dann als unübersetzter Text, statt eine Schaltfläche oder ein Eingabefeld auszublenden.",
+        "fi": "Elementistä, jolla on <code>lang</code>-attribuutti mutta ei omaa käännöstä, ilmoitetaan konsolissa. Oletuksena se myös menettää attribuutin, joten se näytetään kaikilla kielillä: puuttuva rivi käännöstiedostossa näkyy silloin kääntämättömänä tekstinä eikä piilota painiketta tai syöttökenttää.",
+        "sv": "Ett element med ett <code>lang</code>-attribut men utan egen översättning rapporteras i konsolen. Som standard förlorar det också attributet och visas därför på alla språk: en saknad post i översättningsfilen syns då som oöversatt text i stället för att dölja en knapp eller ett inmatningsfält."
+    },
+    "This doesn't happen when the element has siblings in other languages next to it, because then the content is being translated by hand. In this example only C is shown in Swedish:": {
+        "de": "Das geschieht nicht, wenn das Element Geschwisterelemente in anderen Sprachen neben sich hat, denn dann wird der Inhalt von Hand übersetzt. In diesem Beispiel wird auf Schwedisch nur C angezeigt:",
+        "fi": "Näin ei käy, jos elementin vieressä on muunkielisiä sisarelementtejä, koska silloin sisältö käännetään käsin. Tässä esimerkissä ruotsiksi näytetään vain C:",
+        "sv": "Det händer inte när elementet har syskon på andra språk bredvid sig, eftersom innehållet då översätts för hand. I det här exemplet visas bara C på svenska:"
+    },
+    "Add the strict attribute to keep the lang attribute on every untranslated element, so that it is hidden in the other languages:": {
+        "de": "Fügen Sie das Attribut <code>strict</code> hinzu, damit jedes nicht übersetzte Element sein <code>lang</code>-Attribut behält und in den anderen Sprachen ausgeblendet wird:",
+        "fi": "Lisää <code>strict</code>-attribuutti, niin jokainen kääntämätön elementti säilyttää <code>lang</code>-attribuuttinsa ja piilotetaan muilla kielillä:",
+        "sv": "Lägg till attributet <code>strict</code> så att varje oöversatt element behåller sitt <code>lang</code>-attribut och döljs på de andra språken:"
+    },
+    "An element with a lang attribute but no translation is shown in every language, unless it has siblings in other languages or strict is set (see Untranslated content).": {
+        "de": "Ein Element mit einem <code>lang</code>-Attribut, aber ohne Übersetzung wird in jeder Sprache angezeigt, es sei denn, es hat Geschwisterelemente in anderen Sprachen oder <code>strict</code> ist gesetzt (siehe Nicht übersetzte Inhalte).",
+        "fi": "Elementti, jolla on <code>lang</code>-attribuutti mutta ei käännöstä, näytetään kaikilla kielillä, ellei sillä ole muunkielisiä sisarelementtejä tai <code>strict</code> ole asetettu (katso Kääntämätön sisältö).",
+        "sv": "Ett element med ett <code>lang</code>-attribut men utan översättning visas på alla språk, om det inte har syskon på andra språk eller <code>strict</code> är satt (se Oöversatt innehåll)."
+    },
+    "Upgrading from 3.x": {
+        "de": "Upgrade von 3.x",
+        "fi": "Päivitys versiosta 3.x",
+        "sv": "Uppgradering från 3.x"
+    },
+    "Version 4.0 doesn't change the API, but some pages may render differently:": {
+        "de": "Version 4.0 ändert die API nicht, aber manche Seiten werden möglicherweise anders dargestellt:",
+        "fi": "Versio 4.0 ei muuta rajapintaa, mutta jotkin sivut voivat näkyä eri tavalla:",
+        "sv": "Version 4.0 ändrar inte API:et, men vissa sidor kan visas annorlunda:"
+    },
+    "An embedded translation now wins over the translation file for its own language. Previously both were shown.": {
+        "de": "Eine eingebettete Übersetzung hat für ihre eigene Sprache jetzt Vorrang vor der Übersetzungsdatei. Bisher wurden beide angezeigt.",
+        "fi": "Upotettu käännös voittaa nyt käännöstiedoston omalla kielellään. Aiemmin molemmat näytettiin.",
+        "sv": "En inbäddad översättning går nu före översättningsfilen för sitt eget språk. Tidigare visades båda."
+    },
+    "Each embedded translation belongs to one element. Previously any neighbour with a lang attribute counted, so two adjacent untranslated elements in the page's language were hidden in every other language; now they are shown.": {
+        "de": "Jede eingebettete Übersetzung gehört zu einem Element. Bisher zählte jedes Nachbarelement mit einem lang-Attribut, sodass zwei benachbarte nicht übersetzte Elemente in der Sprache der Seite in allen anderen Sprachen ausgeblendet wurden; jetzt werden sie angezeigt.",
+        "fi": "Kukin upotettu käännös kuuluu yhdelle elementille. Aiemmin mikä tahansa lang-attribuutillinen naapuri kelpasi, joten kaksi vierekkäistä kääntämätöntä sivun kielistä elementtiä piilotettiin kaikilla muilla kielillä; nyt ne näytetään.",
+        "sv": "Varje inbäddad översättning hör till ett element. Tidigare räknades alla grannar med ett lang-attribut, så två intilliggande oöversatta element på sidans språk doldes på alla andra språk; nu visas de."
+    },
+    "New: the strict attribute.": {
+        "de": "Neu: das Attribut <code>strict</code>.",
+        "fi": "Uutta: <code>strict</code>-attribuutti.",
+        "sv": "Nytt: attributet <code>strict</code>."
     }
 }

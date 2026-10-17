@@ -30,6 +30,7 @@
       <li lang="en">Attribute translation</li>
       <li lang="en">Remembers the chosen language across pages (<code>persist</code>) and can follow the browser's language</li>
       <li lang="en">Dispatches a <code>languagechange</code> event when the language changes</li>
+      <li lang="en">Embedded translations and a translation file can be combined</li>
     </ul>
     
     <h2 lang="en">Usage</h2>
@@ -87,6 +88,27 @@
     <p lang="en">Refer to the translation file in your HTML:</p>
     <pre><code>&lt;translate-element <ins>src="translations.json"</ins>&gt;&lt;/translate-element&gt;</code></pre>
 
+    <h3 lang="en">Combining both</h3>
+    <p lang="en">You can use embedded translations and a translation file on the same page. An embedded translation wins for its own language, and the file fills in the other languages. Here Swedish comes from the HTML and the other languages from the file:</p>
+    <pre><code>&lt;h1 lang="en"&gt;Welcome&lt;/h1&gt;
+<ins>&lt;h1 lang="sv"&gt;Välkommen hit&lt;/h1&gt;</ins></code></pre>
+    <p lang="en">Embedded translations are the elements in other languages among adjacent siblings that have the same tag name and a <code>lang</code> attribute. Each translation belongs to one element: if the group starts with an element in the page's language, translations follow their element; if it starts with a translation, they precede it.</p>
+    <pre><code>&lt;!-- "Welcome" owns sv, "Hello" owns de --&gt;
+&lt;p lang="en"&gt;Welcome&lt;/p&gt;<ins>&lt;p lang="sv"&gt;Välkommen&lt;/p&gt;</ins>
+&lt;p lang="en"&gt;Hello&lt;/p&gt;<ins>&lt;p lang="de"&gt;Hallo&lt;/p&gt;</ins>
+
+&lt;!-- each fi option belongs to the en option after it --&gt;
+<ins>&lt;option lang="fi" value="1"&gt;yksin&lt;/option&gt;</ins>&lt;option lang="en" value="1"&gt;alone&lt;/option&gt;
+<ins>&lt;option lang="fi" value="2"&gt;kumppanin&lt;/option&gt;</ins>&lt;option lang="en" value="2"&gt;partner&lt;/option&gt;</code></pre>
+    <h3 lang="en">Untranslated content</h3>
+    <p lang="en">An element with a <code>lang</code> attribute but no translation of its own is reported in the console. By default it also loses the attribute, so it is shown in every language: a missing entry in the translation file then shows up as untranslated text instead of hiding a button or an input field.</p>
+    <p lang="en">This doesn't happen when the element has siblings in other languages next to it, because then the content is being translated by hand. In this example only C is shown in Swedish:</p>
+    <pre><code>&lt;p lang="en"&gt;A&lt;/p&gt;
+&lt;p lang="en"&gt;B&lt;/p&gt;
+<ins>&lt;p lang="sv"&gt;C&lt;/p&gt;</ins></code></pre>
+    <p lang="en">Add the <code>strict</code> attribute to keep the <code>lang</code> attribute on every untranslated element, so that it is hidden in the other languages:</p>
+    <pre><code>&lt;translate-element <ins>strict</ins> src="translations.json"&gt;&lt;/translate-element&gt;</code></pre>
+    
     <h2 lang="en">Complete Example</h2>
     <table>
         <tr><th>HTML</th><th><code>translations.json</code></th></tr>
@@ -172,7 +194,7 @@ document.addEventListener('languagechange', (e) =&gt; {
     <h2 lang="en">Good to know</h2>
     <ul>
       <li lang="en">The switcher is a <code>ul</code> of <code>li</code> items with an <code>a</code> link (<code>hreflang</code>, <code>rel="alternate"</code>) in each. The active item has the class <code>selected</code>. Clicking one updates <code>?lang=</code> in the address bar without reloading the page, except on <code>file://</code> pages.</li>
-      <li lang="en">An element with a <code>lang</code> attribute but no translation loses the attribute, so it is shown in every language.</li>
+      <li lang="en">An element with a <code>lang</code> attribute but no translation is shown in every language, unless it has siblings in other languages or <code>strict</code> is set (see Untranslated content).</li>
       <li lang="en">Translations in the JSON file are inserted as HTML, so you can use tags such as <code>&lt;code&gt;</code>. Only use translations you trust.</li>
       <li lang="en">Translated copies keep the inline event handlers of the original, and their <code>id</code> gets a language suffix, such as <code>heading-sv</code>.</li>
       <li lang="en">The <code>label</code> of <code>option</code> and <code>optgroup</code> elements is translated, including options inside an <code>optgroup</code>, and the selected option stays selected when the language changes.</li>
@@ -182,6 +204,14 @@ document.addEventListener('languagechange', (e) =&gt; {
 
     <h2 lang="en">Console output</h2>
     <p lang="en">If the HTML content contains an element with the <code>lang</code> attribute, but no translations are found in the <code>translations.json</code> file, the web component will output the <code>textContent</code> of the untranslated element into the developer console.</p>
+
+    <h2 lang="en">Upgrading from 3.x</h2>
+    <p lang="en">Version 4.0 doesn't change the API, but some pages may render differently:</p>
+    <ul>
+      <li lang="en">An embedded translation now wins over the translation file for its own language. Previously both were shown.</li>
+      <li lang="en">Each embedded translation belongs to one element. Previously any neighbour with a lang attribute counted, so two adjacent untranslated elements in the page's language were hidden in every other language; now they are shown.</li>
+      <li lang="en">New: the <code>strict</code> attribute.</li>
+    </ul>
 
   </body>
 </html>
