@@ -49,6 +49,14 @@ Author your HTML content in any language. Mark the translatable sections with th
 <h1 lang="en">Welcome</h1>
 ```
 
+5. You can also combine the two: a hand-authored sibling wins over the translation file for its own language, and the file fills in the rest. Here the Swedish heading is the hand-authored one, and German comes from `translations.json`:
+
+```html
+<translate-element src="translations.json"></translate-element>
+<h1 lang="en">Welcome</h1>
+<h1 lang="sv">Välkommen hit</h1>
+```
+
 ## Remembering the language across pages
 
 By default the chosen language lives only in the `?lang=` query parameter, so it is lost when the visitor follows a link to another page. Add the `persist` attribute to remember the choice made with the switcher in `localStorage` (key `translate-element:lang`):

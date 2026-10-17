@@ -60,6 +60,9 @@ class TranslateElement extends HTMLElement {
     // the clones translateElement() most recently produced for a given source element,
     // so a deliberate retranslation can remove the previous set before creating new ones
     this.elementClones = new WeakMap()
+    // every clone cloneForLanguage() has made, so a clone sitting next to another source
+    // element is never mistaken for that element's hand-authored translation
+    this.clones = new WeakSet()
   }
 
   /**
@@ -352,9 +355,10 @@ class TranslateElement extends HTMLElement {
   /**
    * Translates a single default-language element: for each language with a matching
    * dictionary entry (by text content or a translatable attribute), inserts a translated
-   * clone right after `elem`. If nothing matches, falls back to treating an already
-   * hand-authored sibling as a translation, and otherwise strips `elem`'s `lang`
-   * attribute so it always displays regardless of the selected language.
+   * clone right after `elem` - unless a hand-authored sibling already covers that
+   * language, which then wins over the dictionary. If neither exists for any language,
+   * strips `elem`'s `lang` attribute so it always displays regardless of the selected
+   * language.
    *
    * Idempotent per element: repeat calls (e.g. from a DOM move re-triggering the
    * MutationObserver) are no-ops unless `processedElements` was explicitly cleared first
@@ -407,6 +411,7 @@ class TranslateElement extends HTMLElement {
       key = elem.label || elem.textContent
     }
     key = key?.trim() || ''
+    const handAuthored = this.handAuthoredLanguages(elem)
     let copies = {}
     if (this.translations[key] !== undefined) {
       for (const lang in this.translations[key]) {
@@ -414,7 +419,7 @@ class TranslateElement extends HTMLElement {
         if (elem.tagName.toLowerCase() == 'title') {
           this.titles[lang] = this.translations[elem.textContent]?.[lang] || elem.textContent
         }
-        if (elem.getAttribute(this.langAttribute) == lang) {
+        if (elem.getAttribute(this.langAttribute) == lang || handAuthored.has(lang)) {
           continue
         }
         copies[lang] = this.cloneForLanguage(elem, lang)
@@ -448,6 +453,9 @@ class TranslateElement extends HTMLElement {
         // element's textContent is not in the translations but attritutes might be
         for (const lang in this.translations[attrKey]) {
           this.registerLanguage(lang)
+          if (handAuthored.has(lang)) {
+            continue
+          }
           const isNewCopy = !copies[lang]
           copies[lang] = copies[lang] || this.cloneForLanguage(elem, lang)
           copies[lang].setAttribute(attr, this.translations[attrKey][lang])
@@ -462,10 +470,7 @@ class TranslateElement extends HTMLElement {
       elem.after(copies[lang])
     }
     this.elementClones.set(elem, Object.values(copies))
-    let translated = Object.keys(copies).length > 0
-    if (!translated) {
-      translated = this.hasHandAuthoredTranslation(elem)
-    }
+    const translated = Object.keys(copies).length > 0 || handAuthored.size > 0
     if (!translated) {
       if (key) console.warn('No translations for ', key, ', ', elem)
       elem.removeAttribute(this.langAttribute) // not translated
@@ -474,17 +479,31 @@ class TranslateElement extends HTMLElement {
   }
 
   /**
-   * True if `elem` (which has no dict entry) already has a hand-authored translation
-   * sitting right next to it (see README: siblings marked with `lang` instead of a
-   * translations file). Authors can order these either way - the translation before or
-   * after its source - so both directions are checked; the sibling's tag name must match
-   * `elem`'s so an unrelated lang-tagged element elsewhere doesn't count as one.
+   * The languages `elem` already has hand-authored translations for (see README: siblings
+   * marked with `lang` instead of a translations file). Authors can order these either
+   * way - translations before or after their source - so the run of adjacent siblings is
+   * followed in both directions. A sibling counts only if its tag name matches `elem`'s
+   * and it is tagged with another language; the run ends at anything else, at another
+   * default-language source element, or at a clone made for some other source, so
+   * neither of those is mistaken for one of `elem`'s translations.
    * @param {Element} elem
-   * @returns {boolean}
+   * @returns {Set<string>}
    */
-  hasHandAuthoredTranslation(elem) {
-    const isTranslationSibling = (sibling) => !!(sibling && sibling.tagName == elem.tagName && sibling.hasAttribute(this.langAttribute))
-    return isTranslationSibling(elem.nextElementSibling) || isTranslationSibling(elem.previousElementSibling)
+  handAuthoredLanguages(elem) {
+    const languages = new Set()
+    const isTranslationSibling = (sibling) => !!(sibling
+      && sibling.tagName == elem.tagName
+      && sibling.hasAttribute(this.langAttribute)
+      && sibling.getAttribute(this.langAttribute) != this.defaultLanguage
+      && !this.clones.has(sibling))
+    for (const direction of ['nextElementSibling', 'previousElementSibling']) {
+      let sibling = elem[direction]
+      while (isTranslationSibling(sibling)) {
+        languages.add(sibling.getAttribute(this.langAttribute))
+        sibling = sibling[direction]
+      }
+    }
+    return languages
   }
 
   /**
@@ -619,6 +638,7 @@ class TranslateElement extends HTMLElement {
    */
   cloneForLanguage(elem, lang) {
     const copy = elem.cloneNode(true)
+    this.clones.add(copy)
     copy.setAttribute(this.langAttribute, lang)
     this.uniquifyId(copy, lang)
     for (const descendant of copy.querySelectorAll('[id]')) {
@@ -667,6 +687,7 @@ class TranslateElement extends HTMLElement {
     this.rootElement = null
     this.processedElements = null
     this.elementClones = null
+    this.clones = null
     this.languageSwitcher = null
     this.searchParams = null
 
